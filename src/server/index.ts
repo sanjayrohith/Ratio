@@ -1,6 +1,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
+import { registerTools } from './tools.js';
 
 export const SERVER_NAME = 'ratio';
 export const SERVER_VERSION = '0.1.0';
@@ -20,6 +21,8 @@ export function createRatioServer(): Server {
       },
     }
   );
+
+  registerTools(server);
 
   return server;
 }

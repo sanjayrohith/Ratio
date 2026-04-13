@@ -52,7 +52,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement minimal modelcontextprotocol server over stdio"
   ```
 
-- [ ] **Task 4**: Register the initial MCP tool signatures for `ratio_write_file` and `ratio_edit_file` in `src/server/tools.ts`, defining input schemas for target path, file content, and agent rationale.
+- [x] **Task 4**: Register the initial MCP tool signatures for `ratio_write_file` and `ratio_edit_file` in `src/server/tools.ts`, defining input schemas for target path, file content, and agent rationale.
 
   ```bash
   git commit -m "feat: add initial stub tool registration for file-write interception"
