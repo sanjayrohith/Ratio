@@ -40,7 +40,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "chore: initialize repository structure and bun project configuration"
   ```
 
-- [ ] **Task 2**: Scaffold core application directory tree (`src/server`, `src/cli`, `src/core`, `src/storage`, `src/types`) and create foundational TypeScript interfaces for MCP tools, interceptor events, and configuration schemas.
+- [x] **Task 2**: Scaffold core application directory tree (`src/server`, `src/cli`, `src/core`, `src/storage`, `src/types`) and create foundational TypeScript interfaces for MCP tools, interceptor events, and configuration schemas.
 
   ```bash
   git commit -m "feat: scaffold base project directories and core type definitions"
