@@ -46,7 +46,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: scaffold base project directories and core type definitions"
   ```
 
-- [ ] **Task 3**: Implement the baseline Model Context Protocol (MCP) server in `src/server/index.ts` using `@modelcontextprotocol/sdk` configured with `StdioServerTransport` for local IPC with coding agents.
+- [x] **Task 3**: Implement the baseline Model Context Protocol (MCP) server in `src/server/index.ts` using `@modelcontextprotocol/sdk` configured with `StdioServerTransport` for local IPC with coding agents.
 
   ```bash
   git commit -m "feat: implement minimal modelcontextprotocol server over stdio"
