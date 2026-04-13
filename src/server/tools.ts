@@ -1,5 +1,9 @@
 import type { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
+import type { CheckpointResponse } from '../types/protocol.js';
 
 export const RATIO_TOOLS = [
   {
@@ -73,7 +77,25 @@ export const RATIO_TOOLS = [
 ] as const;
 
 /**
- * Registers tool discovery handlers with the MCP server instance.
+ * Creates a prototype static checkpoint_required response.
+ */
+export function createMockCheckpointResponse(
+  filePath: string,
+  rationale?: string
+): CheckpointResponse {
+  return {
+    status: 'checkpoint_required',
+    ticketId: `chk_proto_${Date.now().toString(36)}`,
+    file: filePath,
+    question: `Socratic Checkpoint: Before Ratio permits writing to "${filePath}", explain: What is the core architectural mechanism of this change and what failure modes does it guard against?`,
+    concept: 'ARCHITECTURAL_RATIONALE',
+    rationale: rationale ?? 'Intercepted file operation requires comprehension verification.',
+    hint: 'Explain the mechanism clearly in plain language without hand-waving.',
+  };
+}
+
+/**
+ * Registers tool discovery and prototype interception handlers with the MCP server instance.
  */
 export function registerTools(server: Server): void {
   server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -81,4 +103,26 @@ export function registerTools(server: Server): void {
       tools: [...RATIO_TOOLS],
     };
   });
+
+  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const { name, arguments: args } = request.params;
+
+    if (name === 'ratio_write_file' || name === 'ratio_edit_file') {
+      const filePath = typeof args?.path === 'string' ? args.path : 'unknown';
+      const rationale = typeof args?.rationale === 'string' ? args.rationale : undefined;
+      const checkpoint = createMockCheckpointResponse(filePath, rationale);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(checkpoint, null, 2),
+          },
+        ],
+      };
+    }
+
+    throw new Error(`Unknown tool requested: ${name}`);
+  });
 }
+
