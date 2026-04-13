@@ -1,5 +1,5 @@
 [test]
-preload = []
+root = "test"
 
 [install]
 save = true

@@ -64,7 +64,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement mock interceptor returning mandatory checkpoint status"
   ```
 
-- [ ] **Task 6**: Create unit tests in `test/server/handshake.test.ts` verifying MCP server startup, JSON-RPC 2.0 handshake, tool enumeration, and mock tool invocation over mock stdio streams.
+- [x] **Task 6**: Create unit tests in `test/server/handshake.test.ts` verifying MCP server startup, JSON-RPC 2.0 handshake, tool enumeration, and mock tool invocation over mock stdio streams.
 
   ```bash
   git commit -m "test: add unit test suite for mcp server handshake and tool listing"
