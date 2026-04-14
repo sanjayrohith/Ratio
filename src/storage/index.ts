@@ -1,4 +1,4 @@
 /**
  * Local SQLite ledger and filesystem persistence layer.
  */
-export {};
+export * from './fs.js';
