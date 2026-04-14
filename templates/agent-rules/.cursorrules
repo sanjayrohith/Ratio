@@ -1,0 +1,11 @@
+# Ratio Interceptor Rules for Cursor
+
+Ratio is active in this repository to safeguard architectural integrity and ensure Socratic learning checkpoints.
+
+## Guidelines:
+1. All file modifications and creations must be routed through Ratio MCP tools:
+   - `ratio_write_file`: create or overwrite file content.
+   - `ratio_edit_file`: modify existing files.
+2. If Ratio returns `status: "checkpoint_required"`, immediately pause code generation.
+3. Present the Socratic question and ticket ID to the user. Do not answer it yourself.
+4. Relay the user's response via `ratio_submit_answer`.

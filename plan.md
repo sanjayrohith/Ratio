@@ -96,7 +96,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement atomic patch and edit application for ratio_edit_file"
   ```
 
-- [ ] **Task 11**: Create configuration templates in `templates/agent-rules/` generating `CLAUDE.md` and cursor rules that instruct agents (Claude Code, opencode, Cursor) to route file writes through Ratio MCP tools.
+- [x] **Task 11**: Create configuration templates in `templates/agent-rules/` generating `CLAUDE.md` and cursor rules that instruct agents (Claude Code, opencode, Cursor) to route file writes through Ratio MCP tools.
 
   ```bash
   git commit -m "feat: add agent prompt injection and config template generator"

@@ -3,3 +3,4 @@
  */
 export * from './staging/buffer.js';
 export * from './staging/patcher.js';
+export * from './templates.js';
