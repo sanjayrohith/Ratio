@@ -157,7 +157,7 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
     const checkpoint: CheckpointResponse = JSON.parse(callResponse.result.content[0].text);
     expect(checkpoint.status).toBe('checkpoint_required');
     expect(checkpoint.file).toBe(targetFile);
-    expect(checkpoint.ticketId).toMatch(/^chk_proto_/);
+    expect(checkpoint.ticketId).toMatch(/^chk_/);
     expect(checkpoint.question).toContain('Socratic Checkpoint:');
     expect(checkpoint.concept).toBe('ARCHITECTURAL_RATIONALE');
 
@@ -198,7 +198,7 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
     const checkpoint: CheckpointResponse = JSON.parse(firstItem.text);
     expect(checkpoint.status).toBe('checkpoint_required');
     expect(checkpoint.file).toBe(targetFile);
-    expect(checkpoint.ticketId).toMatch(/^chk_proto_/);
+    expect(checkpoint.ticketId).toMatch(/^chk_/);
     expect(checkpoint.question).toContain('Socratic Checkpoint:');
     expect(checkpoint.concept).toBe('ARCHITECTURAL_RATIONALE');
 

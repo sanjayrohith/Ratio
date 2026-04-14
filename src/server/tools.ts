@@ -3,7 +3,14 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import type { CheckpointResponse } from '../types/protocol.js';
+import { defaultStagingBuffer, StagingBuffer } from '../core/staging/buffer.js';
+import { applyEdits } from '../core/staging/patcher.js';
+import { safeReadFile } from '../storage/fs.js';
+import {
+  EditFileInputSchema,
+  WriteFileInputSchema,
+  type CheckpointResponse,
+} from '../types/protocol.js';
 
 export const RATIO_TOOLS = [
   {
@@ -77,27 +84,19 @@ export const RATIO_TOOLS = [
 ] as const;
 
 /**
- * Creates a prototype static checkpoint_required response.
+ * Creates a formatted Socratic question for a given file operation.
  */
-export function createMockCheckpointResponse(
-  filePath: string,
-  rationale?: string
-): CheckpointResponse {
-  return {
-    status: 'checkpoint_required',
-    ticketId: `chk_proto_${Date.now().toString(36)}`,
-    file: filePath,
-    question: `Socratic Checkpoint: Before Ratio permits writing to "${filePath}", explain: What is the core architectural mechanism of this change and what failure modes does it guard against?`,
-    concept: 'ARCHITECTURAL_RATIONALE',
-    rationale: rationale ?? 'Intercepted file operation requires comprehension verification.',
-    hint: 'Explain the mechanism clearly in plain language without hand-waving.',
-  };
+export function createSocraticQuestion(filePath: string): string {
+  return `Socratic Checkpoint: Before Ratio permits writing to "${filePath}", explain: What is the core architectural mechanism of this change and what failure modes does it guard against?`;
 }
 
 /**
- * Registers tool discovery and prototype interception handlers with the MCP server instance.
+ * Registers tool discovery and interception handlers with the MCP server instance.
  */
-export function registerTools(server: Server): void {
+export function registerTools(
+  server: Server,
+  stagingBuffer: StagingBuffer = defaultStagingBuffer
+): void {
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
       tools: [...RATIO_TOOLS],
@@ -105,18 +104,78 @@ export function registerTools(server: Server): void {
   });
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    const { name, arguments: args } = request.params;
+    const { name, arguments: rawArgs } = request.params;
 
-    if (name === 'ratio_write_file' || name === 'ratio_edit_file') {
-      const filePath = typeof args?.path === 'string' ? args.path : 'unknown';
-      const rationale = typeof args?.rationale === 'string' ? args.rationale : undefined;
-      const checkpoint = createMockCheckpointResponse(filePath, rationale);
+    if (name === 'ratio_write_file') {
+      const parsed = WriteFileInputSchema.parse(rawArgs);
+      const question = createSocraticQuestion(parsed.path);
+
+      const staged = stagingBuffer.stage({
+        file: parsed.path,
+        content: parsed.content,
+        operation: 'write',
+        question,
+        concept: 'ARCHITECTURAL_RATIONALE',
+        rationale: parsed.rationale ?? 'Intercepted file operation requires comprehension verification.',
+      });
+
+      const response: CheckpointResponse = {
+        status: 'checkpoint_required',
+        ticketId: staged.ticketId,
+        file: staged.file,
+        question: staged.question,
+        concept: staged.concept,
+        rationale: staged.rationale,
+        hint: 'Explain the mechanism clearly in plain language without hand-waving.',
+        instruction:
+          'Do not modify the file yet. Relay this question to the user and call ratio_submit_answer with this ticketId.',
+      };
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(checkpoint, null, 2),
+            text: JSON.stringify(response, null, 2),
+          },
+        ],
+      };
+    }
+
+    if (name === 'ratio_edit_file') {
+      const parsed = EditFileInputSchema.parse(rawArgs);
+      const existing = await safeReadFile(parsed.path);
+      const patchedContent =
+        existing !== null
+          ? applyEdits(existing, parsed.edits)
+          : parsed.edits.map((e) => e.newText).join('\n');
+      const question = createSocraticQuestion(parsed.path);
+
+      const staged = stagingBuffer.stage({
+        file: parsed.path,
+        content: patchedContent,
+        operation: 'edit',
+        question,
+        concept: 'ARCHITECTURAL_RATIONALE',
+        rationale: parsed.rationale ?? 'Intercepted file operation requires comprehension verification.',
+      });
+
+      const response: CheckpointResponse = {
+        status: 'checkpoint_required',
+        ticketId: staged.ticketId,
+        file: staged.file,
+        question: staged.question,
+        concept: staged.concept,
+        rationale: staged.rationale,
+        hint: 'Explain the mechanism clearly in plain language without hand-waving.',
+        instruction:
+          'Do not modify the file yet. Relay this question to the user and call ratio_submit_answer with this ticketId.',
+      };
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(response, null, 2),
           },
         ],
       };
@@ -125,4 +184,3 @@ export function registerTools(server: Server): void {
     throw new Error(`Unknown tool requested: ${name}`);
   });
 }
-

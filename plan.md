@@ -102,7 +102,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add agent prompt injection and config template generator"
   ```
 
-- [ ] **Task 12**: Add integration test in `test/integration/interception-flow.test.ts` simulating a full agent write request, verifying the returned checkpoint payload and staged write retention.
+- [x] **Task 12**: Add integration test in `test/integration/interception-flow.test.ts` simulating a full agent write request, verifying the returned checkpoint payload and staged write retention.
 
   ```bash
   git commit -m "test: add end-to-end simulation test for agent write interception flow"
