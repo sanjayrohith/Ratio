@@ -72,7 +72,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 2 (7 tasks) — Agent Integration Protocol & Tool Dispatch Pipeline
 
-- [ ] **Task 7**: Define strict Zod and TypeScript schemas in `src/types/protocol.ts` for interceptor responses: `checkpoint_required` (with challenge prompt and ticket ID), `write_permitted`, and `write_rejected` states.
+- [x] **Task 7**: Define strict Zod and TypeScript schemas in `src/types/protocol.ts` for interceptor responses: `checkpoint_required` (with challenge prompt and ticket ID), `write_permitted`, and `write_rejected` states.
 
   ```bash
   git commit -m "feat: define structured tool response schemas for checkpoints and write status"
