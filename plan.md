@@ -90,7 +90,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement direct filesystem write execution when write is permitted"
   ```
 
-- [ ] **Task 10**: Implement diff patching and line-range replacement in `src/core/staging/patcher.ts` for `ratio_edit_file`, ensuring accurate string substitutions before staging.
+- [x] **Task 10**: Implement diff patching and line-range replacement in `src/core/staging/patcher.ts` for `ratio_edit_file`, ensuring accurate string substitutions before staging.
 
   ```bash
   git commit -m "feat: implement atomic patch and edit application for ratio_edit_file"
