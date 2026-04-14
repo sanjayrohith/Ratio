@@ -108,7 +108,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add end-to-end simulation test for agent write interception flow"
   ```
 
-- [ ] **Task 13**: Write architectural documentation in `docs/architecture/interception-protocol.md` explaining how Ratio intercepts agent file writes via MCP and how to configure supported agents.
+- [x] **Task 13**: Write architectural documentation in `docs/architecture/interception-protocol.md` explaining how Ratio intercepts agent file writes via MCP and how to configure supported agents.
 
   ```bash
   git commit -m "docs: document mcp interception protocol and agent configuration guide"
