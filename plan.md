@@ -140,7 +140,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: integrate line threshold and dependency checks into interception pipeline"
   ```
 
-- [ ] **Task 18**: Create comprehensive unit tests in `test/scorer/line-delta.test.ts` testing new file creation, multiline replacements, single-line tweaks, whitespace-only changes, and deletions.
+- [x] **Task 18**: Create comprehensive unit tests in `test/scorer/line-delta.test.ts` testing new file creation, multiline replacements, single-line tweaks, whitespace-only changes, and deletions.
 
   ```bash
   git commit -m "test: add unit tests for line delta calculation across varied file formats"
