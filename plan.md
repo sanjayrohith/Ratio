@@ -128,7 +128,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement line delta calculator for write and edit operations"
   ```
 
-- [ ] **Task 16**: Implement dependency diff parsers in `src/core/scorer/dependencies.ts` for `package.json`, `Cargo.toml`, `requirements.txt`, `pyproject.toml`, and `go.mod` to detect newly added libraries.
+- [x] **Task 16**: Implement dependency diff parsers in `src/core/scorer/dependencies.ts` for `package.json`, `Cargo.toml`, `requirements.txt`, `pyproject.toml`, and `go.mod` to detect newly added libraries.
 
   ```bash
   git commit -m "feat: implement multi-manifest dependency diff parser"
