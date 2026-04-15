@@ -116,7 +116,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 3 (6 tasks) — Heuristic Complexity Scorer: Line Delta & Dependency Analysis
 
-- [ ] **Task 14**: Define TypeScript types and default thresholds in `src/core/scorer/types.ts` for line count delta, file count per turn, and third-party dependency additions.
+- [x] **Task 14**: Define TypeScript types and default thresholds in `src/core/scorer/types.ts` for line count delta, file count per turn, and third-party dependency additions.
 
   ```bash
   git commit -m "feat: define complexity metric types and configurable scoring thresholds"
