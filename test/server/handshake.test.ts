@@ -3,6 +3,8 @@ import { PassThrough } from 'node:stream';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { ComplexityScorer } from '../../src/core/scorer/index.js';
+import { StagingBuffer } from '../../src/core/staging/buffer.js';
 import { createRatioServer, SERVER_NAME, SERVER_VERSION } from '../../src/server/index.js';
 import { RATIO_TOOLS } from '../../src/server/tools.js';
 import type { CheckpointResponse } from '../../src/types/protocol.js';
@@ -97,7 +99,10 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
     const serverStdin = new PassThrough();
     const serverStdout = new PassThrough();
     const transport = new StdioServerTransport(serverStdin, serverStdout);
-    const server = createRatioServer();
+    const server = createRatioServer(
+      new StagingBuffer(),
+      new ComplexityScorer({ maxLinesAdded: 0, maxTotalLinesChanged: 0 })
+    );
 
     await server.connect(transport);
 
@@ -166,7 +171,10 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
 
   it('returns static checkpoint_required when invoking ratio_edit_file', async () => {
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-    const server = createRatioServer();
+    const server = createRatioServer(
+      new StagingBuffer(),
+      new ComplexityScorer({ maxLinesAdded: 0, maxTotalLinesChanged: 0 })
+    );
     const client = new Client(
       { name: 'test-agent', version: '1.0.0' },
       { capabilities: {} }

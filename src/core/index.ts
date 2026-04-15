@@ -4,6 +4,4 @@
 export * from './staging/buffer.js';
 export * from './staging/patcher.js';
 export * from './templates.js';
-export * from './scorer/types.js';
-export * from './scorer/line-delta.js';
-export * from './scorer/dependencies.js';
+export * from './scorer/index.js';

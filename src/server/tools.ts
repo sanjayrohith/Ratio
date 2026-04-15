@@ -3,13 +3,18 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+import {
+  ComplexityScorer,
+  defaultComplexityScorer,
+} from '../core/scorer/index.js';
 import { defaultStagingBuffer, StagingBuffer } from '../core/staging/buffer.js';
 import { applyEdits } from '../core/staging/patcher.js';
-import { safeReadFile } from '../storage/fs.js';
+import { atomicWriteFile, safeReadFile } from '../storage/fs.js';
 import {
   EditFileInputSchema,
   WriteFileInputSchema,
   type CheckpointResponse,
+  type WritePermittedResponse,
 } from '../types/protocol.js';
 
 export const RATIO_TOOLS = [
@@ -84,18 +89,12 @@ export const RATIO_TOOLS = [
 ] as const;
 
 /**
- * Creates a formatted Socratic question for a given file operation.
- */
-export function createSocraticQuestion(filePath: string): string {
-  return `Socratic Checkpoint: Before Ratio permits writing to "${filePath}", explain: What is the core architectural mechanism of this change and what failure modes does it guard against?`;
-}
-
-/**
  * Registers tool discovery and interception handlers with the MCP server instance.
  */
 export function registerTools(
   server: Server,
-  stagingBuffer: StagingBuffer = defaultStagingBuffer
+  stagingBuffer: StagingBuffer = defaultStagingBuffer,
+  scorer: ComplexityScorer = defaultComplexityScorer
 ): void {
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
@@ -108,15 +107,52 @@ export function registerTools(
 
     if (name === 'ratio_write_file') {
       const parsed = WriteFileInputSchema.parse(rawArgs);
-      const question = createSocraticQuestion(parsed.path);
+      const existing = (await safeReadFile(parsed.path)) ?? '';
+      const evaluation = scorer.evaluate(parsed.path, existing, parsed.content);
+
+      if (!evaluation.exceedsThreshold) {
+        // Trivial write: automatically approved and committed directly to disk
+        const writeResult = await atomicWriteFile(parsed.path, parsed.content);
+        const permitted: WritePermittedResponse = {
+          status: 'write_permitted',
+          file: parsed.path,
+          bytesWritten: writeResult.bytesWritten,
+          message: `Write permitted: within complexity thresholds (${evaluation.lineDelta.totalLinesChanged} lines changed).`,
+        };
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(permitted, null, 2),
+            },
+          ],
+        };
+      }
+
+      // Exceeds threshold: stage and generate targeted Socratic question
+      let question: string;
+      if (evaluation.dependencyDiff && evaluation.dependencyDiff.hasNewDependencies) {
+        const added = evaluation.dependencyDiff.addedPackages.join(', ');
+        question = `Socratic Checkpoint: This change introduces new third-party dependency (${added}) in "${parsed.path}". Before writing, explain: Why is this library necessary, what is its architectural footprint, and what failure risks does it introduce?`;
+      } else {
+        question = `Socratic Checkpoint: This change modifies ${evaluation.lineDelta.totalLinesChanged} lines (${evaluation.lineDelta.linesAdded} added, ${evaluation.lineDelta.linesRemoved} removed) in "${parsed.path}". Before writing, explain: What is the core architectural mechanism of this change and what failure modes does it guard against?`;
+      }
 
       const staged = stagingBuffer.stage({
         file: parsed.path,
         content: parsed.content,
         operation: 'write',
         question,
-        concept: 'ARCHITECTURAL_RATIONALE',
-        rationale: parsed.rationale ?? 'Intercepted file operation requires comprehension verification.',
+        concept: evaluation.dependencyDiff?.hasNewDependencies
+          ? 'DEPENDENCY_ADDITION'
+          : 'ARCHITECTURAL_RATIONALE',
+        rationale: parsed.rationale ?? evaluation.summary,
+        metadata: {
+          triggers: evaluation.triggers,
+          lineDelta: evaluation.lineDelta,
+          dependencyDiff: evaluation.dependencyDiff,
+        },
       });
 
       const response: CheckpointResponse = {
@@ -143,20 +179,57 @@ export function registerTools(
 
     if (name === 'ratio_edit_file') {
       const parsed = EditFileInputSchema.parse(rawArgs);
-      const existing = await safeReadFile(parsed.path);
+      const existing = (await safeReadFile(parsed.path)) ?? '';
       const patchedContent =
-        existing !== null
+        existing !== ''
           ? applyEdits(existing, parsed.edits)
           : parsed.edits.map((e) => e.newText).join('\n');
-      const question = createSocraticQuestion(parsed.path);
+
+      const evaluation = scorer.evaluate(parsed.path, existing, patchedContent);
+
+      if (!evaluation.exceedsThreshold) {
+        // Trivial edit: auto-approve and write directly to disk
+        const writeResult = await atomicWriteFile(parsed.path, patchedContent);
+        const permitted: WritePermittedResponse = {
+          status: 'write_permitted',
+          file: parsed.path,
+          bytesWritten: writeResult.bytesWritten,
+          message: `Write permitted: within complexity thresholds (${evaluation.lineDelta.totalLinesChanged} lines changed).`,
+        };
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(permitted, null, 2),
+            },
+          ],
+        };
+      }
+
+      // Exceeds threshold: stage and generate targeted Socratic question
+      let question: string;
+      if (evaluation.dependencyDiff && evaluation.dependencyDiff.hasNewDependencies) {
+        const added = evaluation.dependencyDiff.addedPackages.join(', ');
+        question = `Socratic Checkpoint: This edit introduces new third-party dependency (${added}) in "${parsed.path}". Before applying, explain: Why is this library necessary and what does it do?`;
+      } else {
+        question = `Socratic Checkpoint: This edit changes ${evaluation.lineDelta.totalLinesChanged} lines in "${parsed.path}". Before applying, explain: What is the architectural purpose of this modification?`;
+      }
 
       const staged = stagingBuffer.stage({
         file: parsed.path,
         content: patchedContent,
         operation: 'edit',
         question,
-        concept: 'ARCHITECTURAL_RATIONALE',
-        rationale: parsed.rationale ?? 'Intercepted file operation requires comprehension verification.',
+        concept: evaluation.dependencyDiff?.hasNewDependencies
+          ? 'DEPENDENCY_ADDITION'
+          : 'ARCHITECTURAL_RATIONALE',
+        rationale: parsed.rationale ?? evaluation.summary,
+        metadata: {
+          triggers: evaluation.triggers,
+          lineDelta: evaluation.lineDelta,
+          dependencyDiff: evaluation.dependencyDiff,
+        },
       });
 
       const response: CheckpointResponse = {

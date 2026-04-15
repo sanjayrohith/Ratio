@@ -1,6 +1,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
+import type { ComplexityScorer } from '../core/scorer/index.js';
 import type { StagingBuffer } from '../core/staging/buffer.js';
 import { registerTools } from './tools.js';
 
@@ -10,7 +11,10 @@ export const SERVER_VERSION = '0.1.0';
 /**
  * Creates and configures the baseline Ratio MCP server instance.
  */
-export function createRatioServer(stagingBuffer?: StagingBuffer): Server {
+export function createRatioServer(
+  stagingBuffer?: StagingBuffer,
+  scorer?: ComplexityScorer
+): Server {
   const server = new Server(
     {
       name: SERVER_NAME,
@@ -23,7 +27,7 @@ export function createRatioServer(stagingBuffer?: StagingBuffer): Server {
     }
   );
 
-  registerTools(server, stagingBuffer);
+  registerTools(server, stagingBuffer, scorer);
 
   return server;
 }

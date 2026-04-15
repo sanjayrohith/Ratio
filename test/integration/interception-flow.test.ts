@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { ComplexityScorer } from '../../src/core/scorer/index.js';
 import { StagingBuffer } from '../../src/core/staging/buffer.js';
 import { injectAgentRules } from '../../src/core/templates.js';
 import { createRatioServer } from '../../src/server/index.js';
@@ -13,7 +14,10 @@ import type { CheckpointResponse } from '../../src/types/protocol.js';
 describe('Agent Write Interception Flow Integration Test', () => {
   it('intercepts agent file write, returns checkpoint_required, and retains payload in staging buffer', async () => {
     const stagingBuffer = new StagingBuffer();
-    const server = createRatioServer(stagingBuffer);
+    const server = createRatioServer(
+      stagingBuffer,
+      new ComplexityScorer({ maxLinesAdded: 0, maxTotalLinesChanged: 0 })
+    );
     const client = new Client(
       { name: 'claude-code-agent', version: '1.0.0' },
       { capabilities: {} }
@@ -78,7 +82,10 @@ describe('Agent Write Interception Flow Integration Test', () => {
     await atomicWriteFile(targetFile, initialCode);
 
     const stagingBuffer = new StagingBuffer();
-    const server = createRatioServer(stagingBuffer);
+    const server = createRatioServer(
+      stagingBuffer,
+      new ComplexityScorer({ maxLinesAdded: 0, maxTotalLinesChanged: 0 })
+    );
     const client = new Client(
       { name: 'cursor-agent', version: '1.0.0' },
       { capabilities: {} }

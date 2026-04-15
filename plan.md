@@ -134,7 +134,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement multi-manifest dependency diff parser"
   ```
 
-- [ ] **Task 17**: Connect `LineDeltaCalculator` and dependency diff detection into the MCP tool request handler, automatically approving trivial edits and flagging writes that exceed thresholds.
+- [x] **Task 17**: Connect `LineDeltaCalculator` and dependency diff detection into the MCP tool request handler, automatically approving trivial edits and flagging writes that exceed thresholds.
 
   ```bash
   git commit -m "feat: integrate line threshold and dependency checks into interception pipeline"
