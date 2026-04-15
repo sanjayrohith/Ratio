@@ -122,7 +122,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: define complexity metric types and configurable scoring thresholds"
   ```
 
-- [ ] **Task 15**: Implement `LineDeltaCalculator` in `src/core/scorer/line-delta.ts` computing lines added, lines removed, and total modification footprint between current disk content and proposed content.
+- [x] **Task 15**: Implement `LineDeltaCalculator` in `src/core/scorer/line-delta.ts` computing lines added, lines removed, and total modification footprint between current disk content and proposed content.
 
   ```bash
   git commit -m "feat: implement line delta calculator for write and edit operations"
