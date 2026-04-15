@@ -146,7 +146,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add unit tests for line delta calculation across varied file formats"
   ```
 
-- [ ] **Task 19**: Write unit tests in `test/scorer/dependencies.test.ts` validating detection of added packages across npm, pip, and cargo manifests with various dependency block structures.
+- [x] **Task 19**: Write unit tests in `test/scorer/dependencies.test.ts` validating detection of added packages across npm, pip, and cargo manifests with various dependency block structures.
 
   ```bash
   git commit -m "test: add unit tests for dependency parser detecting new imports and packages"
