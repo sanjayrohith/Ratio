@@ -196,7 +196,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add integration tests for composite complexity scoring engine"
   ```
 
-- [ ] **Task 27**: Refactor complexity scoring into modular pipeline stages (`SizeStage`, `LayerStage`, `DependencyStage`) sharing a common `EvaluationContext` interface for maintainability.
+- [x] **Task 27**: Refactor complexity scoring into modular pipeline stages (`SizeStage`, `LayerStage`, `DependencyStage`) sharing a common `EvaluationContext` interface for maintainability.
 
   ```bash
   git commit -m "refactor: extract complexity analysis into modular pipeline stages"
