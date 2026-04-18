@@ -154,7 +154,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 4 (8 tasks) — Complexity Scorer: Architectural Layer Tagger & Aggregation
 
-- [ ] **Task 20**: Define architectural layer categories (`api`, `db`, `auth`, `ui`, `core`, `config`, `worker`) and regex/glob path matchers in `src/core/scorer/layers.ts`.
+- [x] **Task 20**: Define architectural layer categories (`api`, `db`, `auth`, `ui`, `core`, `config`, `worker`) and regex/glob path matchers in `src/core/scorer/layers.ts`.
 
   ```bash
   git commit -m "feat: define architectural layer taxonomy and path pattern matchers"
