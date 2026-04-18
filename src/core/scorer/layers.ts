@@ -40,11 +40,13 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
       '**/session/**',
       '**/sessions/**',
       '**/guards/**',
+      '**/*guard*',
       '**/permissions/**',
       '**/middleware/auth*',
       '**/*auth*middleware*',
       '**/passport/**',
       '**/strategies/**',
+      '**/*auth*',
     ],
     description: 'Authentication, authorization, tokens, session management, and auth guards',
   },
@@ -53,10 +55,13 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
     patterns: [
       '**/db/**',
       '**/models/**',
+      '**/models.py',
+      '**/*models.py',
       '**/migrations/**',
       '**/schema/**',
       '**/schemas/**',
       '**/entities/**',
+      '**/*entity*',
       '**/repositories/**',
       '**/*.prisma',
       '**/prisma/**',
@@ -72,11 +77,13 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
       '**/api/**',
       '**/routes/**',
       '**/controllers/**',
+      '**/*controller*',
       '**/handlers/**',
       '**/endpoints/**',
       '**/routers/**',
       '**/resolvers/**',
       '**/views.py',
+      '**/*views.py',
       '**/app/api/**',
     ],
     description: 'API routing, HTTP/gRPC handlers, controllers, endpoints, and GraphQL resolvers',
@@ -107,6 +114,7 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
       '**/queues/**',
       '**/tasks/**',
       '**/celery.py',
+      '**/*celery*',
       '**/cron/**',
       '**/schedulers/**',
       '**/*worker*',
@@ -118,8 +126,11 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
     patterns: [
       '**/config/**',
       '**/configs/**',
+      '**/config.py',
+      '**/*config.py',
       '**/*.config.*',
       '**/settings.py',
+      '**/*settings.py',
       '**/conf/**',
       '**/.env*',
       '**/docker-compose*',
@@ -132,6 +143,7 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
     patterns: [
       '**/core/**',
       '**/services/**',
+      '**/*service*',
       '**/domain/**',
       '**/usecases/**',
       '**/lib/**',
@@ -144,17 +156,24 @@ export const DEFAULT_LAYER_RULES: LayerRuleDefinition[] = [
 ];
 
 /**
- * Converts a simple glob pattern (with * and **) into a RegExp.
+ * Converts a glob pattern (with *, **) into a compiled regular expression.
  */
 export function globToRegex(glob: string): RegExp {
-  const normalized = glob.replace(/\\/g, '/').toLowerCase();
-  let regexString = normalized
-    .replace(/\./g, '\\.')
-    .replace(/\*\*\//g, '.*(?:^|/)')
-    .replace(/\*\*/g, '.*')
-    .replace(/\*/g, '[^/]*');
+  const normalized = glob.replace(/\\/g, '/');
 
-  return new RegExp(regexString, 'i');
+  // Tokenize globstars and single stars to avoid collision during substitution
+  let token = normalized
+    .replace(/\./g, '\\.')
+    .replace(/\*\*\//g, '___GLOBSTAR_SLASH___')
+    .replace(/\*\*/g, '___GLOBSTAR___')
+    .replace(/\*/g, '___SINGLESTAR___');
+
+  token = token
+    .replace(/___GLOBSTAR_SLASH___/g, '(?:.*\\/|^)')
+    .replace(/___GLOBSTAR___/g, '.*')
+    .replace(/___SINGLESTAR___/g, '[^/]*');
+
+  return new RegExp(`^${token}$`, 'i');
 }
 
 /**

@@ -184,7 +184,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: integrate layer tagger into write interception pipeline"
   ```
 
-- [ ] **Task 25**: Add unit tests in `test/scorer/layers.test.ts` verifying layer classification for standard project structures (Express, Next.js, Django, FastAPI, NestJS).
+- [x] **Task 25**: Add unit tests in `test/scorer/layers.test.ts` verifying layer classification for standard project structures (Express, Next.js, Django, FastAPI, NestJS).
 
   ```bash
   git commit -m "test: add unit tests for architectural path pattern matching"

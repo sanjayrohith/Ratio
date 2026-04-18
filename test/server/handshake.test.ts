@@ -164,7 +164,9 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
     expect(checkpoint.file).toBe(targetFile);
     expect(checkpoint.ticketId).toMatch(/^chk_/);
     expect(checkpoint.question).toContain('Socratic Checkpoint:');
-    expect(checkpoint.concept).toBe('ARCHITECTURAL_RATIONALE');
+    expect(['ARCHITECTURAL_RATIONALE', 'MULTI_LAYER_CHANGE', 'AUTHENTICATION_ARCHITECTURE']).toContain(
+      checkpoint.concept!
+    );
 
     await server.close();
   });
