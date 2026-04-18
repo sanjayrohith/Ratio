@@ -3,7 +3,7 @@ import { PassThrough } from 'node:stream';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { ComplexityScorer } from '../../src/core/scorer/index.js';
+import { ComplexityScorer, LayerTransitionDetector } from '../../src/core/scorer/index.js';
 import { StagingBuffer } from '../../src/core/staging/buffer.js';
 import { createRatioServer, SERVER_NAME, SERVER_VERSION } from '../../src/server/index.js';
 import { RATIO_TOOLS } from '../../src/server/tools.js';
@@ -173,7 +173,11 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     const server = createRatioServer(
       new StagingBuffer(),
-      new ComplexityScorer({ maxLinesAdded: 0, maxTotalLinesChanged: 0 })
+      new ComplexityScorer(
+        { maxLinesAdded: 0, maxTotalLinesChanged: 0 },
+        undefined,
+        new LayerTransitionDetector()
+      )
     );
     const client = new Client(
       { name: 'test-agent', version: '1.0.0' },

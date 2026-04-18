@@ -131,26 +131,23 @@ export function registerTools(
       }
 
       // Exceeds threshold: stage and generate targeted Socratic question
-      let question: string;
-      if (evaluation.dependencyDiff && evaluation.dependencyDiff.hasNewDependencies) {
-        const added = evaluation.dependencyDiff.addedPackages.join(', ');
-        question = `Socratic Checkpoint: This change introduces new third-party dependency (${added}) in "${parsed.path}". Before writing, explain: Why is this library necessary, what is its architectural footprint, and what failure risks does it introduce?`;
-      } else {
-        question = `Socratic Checkpoint: This change modifies ${evaluation.lineDelta.totalLinesChanged} lines (${evaluation.lineDelta.linesAdded} added, ${evaluation.lineDelta.linesRemoved} removed) in "${parsed.path}". Before writing, explain: What is the core architectural mechanism of this change and what failure modes does it guard against?`;
-      }
+      const question =
+        evaluation.suggestedQuestion ??
+        `Socratic Checkpoint: Modifying "${parsed.path}". Before writing, explain the architectural mechanism.`;
+      const concept = evaluation.concept ?? 'ARCHITECTURAL_RATIONALE';
 
       const staged = stagingBuffer.stage({
         file: parsed.path,
         content: parsed.content,
         operation: 'write',
         question,
-        concept: evaluation.dependencyDiff?.hasNewDependencies
-          ? 'DEPENDENCY_ADDITION'
-          : 'ARCHITECTURAL_RATIONALE',
+        concept,
         rationale: parsed.rationale ?? evaluation.summary,
         metadata: {
           triggers: evaluation.triggers,
           lineDelta: evaluation.lineDelta,
+          layers: evaluation.layers,
+          layerTransitions: evaluation.layerTransitions,
           dependencyDiff: evaluation.dependencyDiff,
         },
       });
@@ -208,26 +205,23 @@ export function registerTools(
       }
 
       // Exceeds threshold: stage and generate targeted Socratic question
-      let question: string;
-      if (evaluation.dependencyDiff && evaluation.dependencyDiff.hasNewDependencies) {
-        const added = evaluation.dependencyDiff.addedPackages.join(', ');
-        question = `Socratic Checkpoint: This edit introduces new third-party dependency (${added}) in "${parsed.path}". Before applying, explain: Why is this library necessary and what does it do?`;
-      } else {
-        question = `Socratic Checkpoint: This edit changes ${evaluation.lineDelta.totalLinesChanged} lines in "${parsed.path}". Before applying, explain: What is the architectural purpose of this modification?`;
-      }
+      const question =
+        evaluation.suggestedQuestion ??
+        `Socratic Checkpoint: Modifying "${parsed.path}". Before writing, explain the architectural mechanism.`;
+      const concept = evaluation.concept ?? 'ARCHITECTURAL_RATIONALE';
 
       const staged = stagingBuffer.stage({
         file: parsed.path,
         content: patchedContent,
         operation: 'edit',
         question,
-        concept: evaluation.dependencyDiff?.hasNewDependencies
-          ? 'DEPENDENCY_ADDITION'
-          : 'ARCHITECTURAL_RATIONALE',
+        concept,
         rationale: parsed.rationale ?? evaluation.summary,
         metadata: {
           triggers: evaluation.triggers,
           lineDelta: evaluation.lineDelta,
+          layers: evaluation.layers,
+          layerTransitions: evaluation.layerTransitions,
           dependencyDiff: evaluation.dependencyDiff,
         },
       });

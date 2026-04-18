@@ -1,3 +1,6 @@
+import type { LayerCategory } from './layers.js';
+import type { LayerTransitionResult } from './transitions.js';
+
 /**
  * Types and interfaces for the Heuristic Complexity Scorer.
  */
@@ -40,6 +43,10 @@ export interface ComplexityEvaluation {
   exceedsThreshold: boolean;
   triggers: string[];
   lineDelta: LineDeltaMetrics;
+  layers?: LayerCategory[];
+  layerTransitions?: LayerTransitionResult;
   dependencyDiff?: DependencyDiff;
+  concept?: string;
+  suggestedQuestion?: string;
   summary: string;
 }

@@ -178,7 +178,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add configurable rule definitions in ratio configuration schema"
   ```
 
-- [ ] **Task 24**: Integrate architectural layer tagging into `ratio_write_file` and `ratio_edit_file`, flagging multi-layer operations (such as simultaneously adding a DB migration and an API route) for checkpointing.
+- [x] **Task 24**: Integrate architectural layer tagging into `ratio_write_file` and `ratio_edit_file`, flagging multi-layer operations (such as simultaneously adding a DB migration and an API route) for checkpointing.
 
   ```bash
   git commit -m "feat: integrate layer tagger into write interception pipeline"
