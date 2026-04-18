@@ -159,7 +159,13 @@ export class CompositeScorer {
 
     // 6. Determine Risk Level
     let riskLevel: RiskLevel;
-    if (riskScore >= 75 || triggers.length >= 2) {
+    if (
+      riskScore >= 75 ||
+      triggers.length >= 2 ||
+      layerTransitions.layersTouched.length >= 3 ||
+      (layerTransitions.layersTouched.includes('auth') &&
+        layerTransitions.layersTouched.includes('db'))
+    ) {
       riskLevel = 'critical';
     } else if (riskScore >= 45 || triggers.length >= 1) {
       riskLevel = 'high';

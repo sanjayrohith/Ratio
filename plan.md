@@ -190,7 +190,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add unit tests for architectural path pattern matching"
   ```
 
-- [ ] **Task 26**: Create integration tests in `test/scorer/composite.test.ts` verifying that multi-layer changes trigger checkpoints while single-layer small diffs pass through transparently.
+- [x] **Task 26**: Create integration tests in `test/scorer/composite.test.ts` verifying that multi-layer changes trigger checkpoints while single-layer small diffs pass through transparently.
 
   ```bash
   git commit -m "test: add integration tests for composite complexity scoring engine"
