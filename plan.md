@@ -160,7 +160,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: define architectural layer taxonomy and path pattern matchers"
   ```
 
-- [ ] **Task 21**: Implement `LayerTransitionDetector` in `src/core/scorer/transitions.ts` to identify when tool invocations within a single turn cross architectural layer boundaries.
+- [x] **Task 21**: Implement `LayerTransitionDetector` in `src/core/scorer/transitions.ts` to identify when tool invocations within a single turn cross architectural layer boundaries.
 
   ```bash
   git commit -m "feat: implement multi-layer change detector across concurrent writes"

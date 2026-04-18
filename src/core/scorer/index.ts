@@ -11,6 +11,7 @@ export * from './types.js';
 export * from './line-delta.js';
 export * from './dependencies.js';
 export * from './layers.js';
+export * from './transitions.js';
 
 /**
  * Heuristic complexity scorer evaluating line deltas and dependency additions.
