@@ -166,7 +166,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement multi-layer change detector across concurrent writes"
   ```
 
-- [ ] **Task 22**: Implement the composite scoring aggregator in `src/core/scorer/composite.ts`, combining line delta, file count, layer transitions, and dependency additions into a unified risk assessment.
+- [x] **Task 22**: Implement the composite scoring aggregator in `src/core/scorer/composite.ts`, combining line delta, file count, layer transitions, and dependency additions into a unified risk assessment.
 
   ```bash
   git commit -m "feat: implement composite complexity score aggregator"
