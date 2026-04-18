@@ -172,7 +172,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement composite complexity score aggregator"
   ```
 
-- [ ] **Task 23**: Expand `ratio.config.json` schema in `src/core/config/schema.ts` to allow customizable scoring weights, layer path definitions, and line delta thresholds per repository.
+- [x] **Task 23**: Expand `ratio.config.json` schema in `src/core/config/schema.ts` to allow customizable scoring weights, layer path definitions, and line delta thresholds per repository.
 
   ```bash
   git commit -m "feat: add configurable rule definitions in ratio configuration schema"
