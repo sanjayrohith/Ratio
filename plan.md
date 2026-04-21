@@ -216,7 +216,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: define and execute initial schema migration for ledger and sessions"
   ```
 
-- [ ] **Task 30**: Build repository workspace utilities in `src/storage/workspace.ts` to locate project root, ensure isolated `.ratio/` directory creation, and manage repo-scoped `ledger.db`.
+- [x] **Task 30**: Build repository workspace utilities in `src/storage/workspace.ts` to locate project root, ensure isolated `.ratio/` directory creation, and manage repo-scoped `ledger.db`.
 
   ```bash
   git commit -m "feat: implement repository scoping and local .ratio directory locator"
