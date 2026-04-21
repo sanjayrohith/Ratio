@@ -204,7 +204,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 5 (4 tasks) — SQLite Ledger Database Foundation & Workspace Scoping
 
-- [ ] **Task 28**: Implement the SQLite database provider in `src/storage/db.ts` using `bun:sqlite`, configuring Write-Ahead Logging (WAL), foreign keys, and synchronous pragmas.
+- [x] **Task 28**: Implement the SQLite database provider in `src/storage/db.ts` using `bun:sqlite`, configuring Write-Ahead Logging (WAL), foreign keys, and synchronous pragmas.
 
   ```bash
   git commit -m "feat: initialize sqlite database connection with wal mode and bun:sqlite"
