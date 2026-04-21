@@ -210,7 +210,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: initialize sqlite database connection with wal mode and bun:sqlite"
   ```
 
-- [ ] **Task 29**: Create migration script in `src/storage/migrations/001_initial_schema.sql` defining `sessions`, `interceptions`, `checkpoints`, and `trust_scores` tables with indexes and timestamps.
+- [x] **Task 29**: Create migration script in `src/storage/migrations/001_initial_schema.sql` defining `sessions`, `interceptions`, `checkpoints`, and `trust_scores` tables with indexes and timestamps.
 
   ```bash
   git commit -m "feat: define and execute initial schema migration for ledger and sessions"
