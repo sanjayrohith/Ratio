@@ -222,7 +222,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement repository scoping and local .ratio directory locator"
   ```
 
-- [ ] **Task 31**: Add tests in `test/storage/migration.test.ts` verifying database initialization, migration application, table schema integrity, and clean connection disposal.
+- [x] **Task 31**: Add tests in `test/storage/migration.test.ts` verifying database initialization, migration application, table schema integrity, and clean connection disposal.
 
   ```bash
   git commit -m "test: add migration runner tests and sqlite connection lifecycle checks"
