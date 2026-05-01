@@ -248,7 +248,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add fts5 virtual table for full-text search over checkpoint history"
   ```
 
-- [ ] **Task 35**: Implement query interface in `src/storage/queries.ts` supporting pagination, filtering by file path, date ranges, concept category, and full-text keyword queries.
+- [x] **Task 35**: Implement query interface in `src/storage/queries.ts` supporting pagination, filtering by file path, date ranges, concept category, and full-text keyword queries.
 
   ```bash
   git commit -m "feat: implement repository query interface for checkpoint history retrieval"
