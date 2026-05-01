@@ -254,7 +254,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement repository query interface for checkpoint history retrieval"
   ```
 
-- [ ] **Task 36**: Add integration tests in `test/storage/checkpoint-repo.test.ts` verifying checkpoint persistence, lifecycle status updates, and keyword search via FTS5 queries.
+- [x] **Task 36**: Add integration tests in `test/storage/checkpoint-repo.test.ts` verifying checkpoint persistence, lifecycle status updates, and keyword search via FTS5 queries.
 
   ```bash
   git commit -m "test: add integration tests for checkpoint persistence and fts5 search"
