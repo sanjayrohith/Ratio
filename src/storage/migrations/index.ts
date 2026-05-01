@@ -1,5 +1,5 @@
 import { Database } from 'bun:sqlite';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 export interface MigrationRecord {
@@ -78,6 +78,38 @@ CREATE TABLE IF NOT EXISTS trust_scores (
 CREATE INDEX IF NOT EXISTS idx_trust_scores_updated_at ON trust_scores(updated_at);
 `;
 
+export const FTS5_MIGRATION_SQL = `
+CREATE VIRTUAL TABLE IF NOT EXISTS checkpoints_fts USING fts5(
+  ticket_id UNINDEXED,
+  file_path,
+  question,
+  concept,
+  student_answer,
+  content='checkpoints',
+  content_rowid='rowid'
+);
+
+-- Trigger: Insert into FTS on new checkpoint row
+CREATE TRIGGER IF NOT EXISTS checkpoints_ai AFTER INSERT ON checkpoints BEGIN
+  INSERT INTO checkpoints_fts(rowid, ticket_id, file_path, question, concept, student_answer)
+  VALUES (new.rowid, new.ticket_id, new.file_path, new.question, new.concept, new.student_answer);
+END;
+
+-- Trigger: Delete from FTS on checkpoint deletion
+CREATE TRIGGER IF NOT EXISTS checkpoints_ad AFTER DELETE ON checkpoints BEGIN
+  INSERT INTO checkpoints_fts(checkpoints_fts, rowid, ticket_id, file_path, question, concept, student_answer)
+  VALUES ('delete', old.rowid, old.ticket_id, old.file_path, old.question, old.concept, old.student_answer);
+END;
+
+-- Trigger: Update FTS on checkpoint update
+CREATE TRIGGER IF NOT EXISTS checkpoints_au AFTER UPDATE ON checkpoints BEGIN
+  INSERT INTO checkpoints_fts(checkpoints_fts, rowid, ticket_id, file_path, question, concept, student_answer)
+  VALUES ('delete', old.rowid, old.ticket_id, old.file_path, old.question, old.concept, old.student_answer);
+  INSERT INTO checkpoints_fts(rowid, ticket_id, file_path, question, concept, student_answer)
+  VALUES (new.rowid, new.ticket_id, new.file_path, new.question, new.concept, new.student_answer);
+END;
+`;
+
 /**
  * Embedded migrations list fallback if running in bundled environment.
  */
@@ -86,6 +118,11 @@ const EMBEDDED_MIGRATIONS: Array<{ version: number; name: string; sql: string }>
     version: 1,
     name: '001_initial_schema.sql',
     sql: INITIAL_MIGRATION_SQL,
+  },
+  {
+    version: 2,
+    name: '002_fts5_checkpoints.sql',
+    sql: FTS5_MIGRATION_SQL,
   },
 ];
 
@@ -107,16 +144,18 @@ export function runMigrations(db: Database, migrationsDir?: string): number {
 
   let migrations: Array<{ version: number; name: string; sql: string }> = [];
 
-  if (migrationsDir) {
+  const targetDir = migrationsDir ?? (existsSync(join(import.meta.dir, '001_initial_schema.sql')) ? import.meta.dir : undefined);
+
+  if (targetDir && existsSync(targetDir)) {
     try {
-      const files = readdirSync(migrationsDir)
+      const files = readdirSync(targetDir)
         .filter((f) => f.endsWith('.sql'))
         .sort();
 
       migrations = files.map((file) => {
         const match = file.match(/^(\d+)/);
         const version = match ? parseInt(match[1], 10) : 0;
-        const sql = readFileSync(join(migrationsDir, file), 'utf-8');
+        const sql = readFileSync(join(targetDir, file), 'utf-8');
         return { version, name: file, sql };
       });
     } catch {

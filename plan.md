@@ -242,7 +242,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement interception session tracker and turn correlator"
   ```
 
-- [ ] **Task 34**: Add migration in `src/storage/migrations/002_fts5_checkpoints.sql` creating an FTS5 virtual table `checkpoints_fts` and triggers to enable fast full-text search across questions and answers.
+- [x] **Task 34**: Add migration in `src/storage/migrations/002_fts5_checkpoints.sql` creating an FTS5 virtual table `checkpoints_fts` and triggers to enable fast full-text search across questions and answers.
 
   ```bash
   git commit -m "feat: add fts5 virtual table for full-text search over checkpoint history"
