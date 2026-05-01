@@ -230,7 +230,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 6 (5 tasks) — Checkpoint Persistence & Full-Text Search (FTS5)
 
-- [ ] **Task 32**: Implement `CheckpointRepository` in `src/storage/checkpoint-repo.ts` with methods to insert checkpoints, record student answers, update pass/fail status, and query records.
+- [x] **Task 32**: Implement `CheckpointRepository` in `src/storage/checkpoint-repo.ts` with methods to insert checkpoints, record student answers, update pass/fail status, and query records.
 
   ```bash
   git commit -m "feat: implement data access layer for logging checkpoint events"
