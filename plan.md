@@ -236,7 +236,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement data access layer for logging checkpoint events"
   ```
 
-- [ ] **Task 33**: Implement `SessionRepository` in `src/storage/session-repo.ts` to group tool calls into distinct coding sessions, tracking files touched, duration, and checkpoint statistics.
+- [x] **Task 33**: Implement `SessionRepository` in `src/storage/session-repo.ts` to group tool calls into distinct coding sessions, tracking files touched, duration, and checkpoint statistics.
 
   ```bash
   git commit -m "feat: implement interception session tracker and turn correlator"

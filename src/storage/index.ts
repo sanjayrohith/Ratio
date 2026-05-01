@@ -6,3 +6,4 @@ export * from './db.js';
 export * from './migrations/index.js';
 export * from './workspace.js';
 export * from './checkpoint-repo.js';
+export * from './session-repo.js';
