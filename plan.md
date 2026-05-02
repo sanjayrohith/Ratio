@@ -280,7 +280,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement dynamic threshold scaling based on file trust score"
   ```
 
-- [ ] **Task 40**: Implement trust score coordinator in `src/core/trust/coordinator.ts` updating file scores immediately when checkpoint answers are evaluated as passed or failed.
+- [x] **Task 40**: Implement trust score coordinator in `src/core/trust/coordinator.ts` updating file scores immediately when checkpoint answers are evaluated as passed or failed.
 
   ```bash
   git commit -m "feat: implement trust score update logic triggered on checkpoint resolution"
