@@ -292,7 +292,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add unit tests for trust score decay and recovery formulas"
   ```
 
-- [ ] **Task 42**: Write integration tests in `test/trust/scaler.test.ts` proving that repeated shallow answers progressively tighten diff thresholds on the affected file.
+- [x] **Task 42**: Write integration tests in `test/trust/scaler.test.ts` proving that repeated shallow answers progressively tighten diff thresholds on the affected file.
 
   ```bash
   git commit -m "test: add integration test for dynamic threshold adaptation over successive writes"
