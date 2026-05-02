@@ -268,7 +268,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: define trust score mathematical model and decay-recovery constants"
   ```
 
-- [ ] **Task 38**: Implement `TrustScoreRepository` in `src/storage/trust-repo.ts` managing per-file records, tracking score adjustments, total passes, total failures, and update timestamps.
+- [x] **Task 38**: Implement `TrustScoreRepository` in `src/storage/trust-repo.ts` managing per-file records, tracking score adjustments, total passes, total failures, and update timestamps.
 
   ```bash
   git commit -m "feat: implement trust score repository and per-file state persistence"

@@ -8,3 +8,4 @@ export * from './workspace.js';
 export * from './checkpoint-repo.js';
 export * from './session-repo.js';
 export * from './queries.js';
+export * from './trust-repo.js';
