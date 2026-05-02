@@ -262,7 +262,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 7 (6 tasks) — Per-File Trust Score Engine (Faded Scaffolding)
 
-- [ ] **Task 37**: Define mathematical formulas and default parameters in `src/core/trust/model.ts`: initial score (1.0), decay penalty (-0.25), recovery increment (+0.1), and bounds [0.0, 1.0].
+- [x] **Task 37**: Define mathematical formulas and default parameters in `src/core/trust/model.ts`: initial score (1.0), decay penalty (-0.25), recovery increment (+0.1), and bounds [0.0, 1.0].
 
   ```bash
   git commit -m "feat: define trust score mathematical model and decay-recovery constants"
