@@ -286,7 +286,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement trust score update logic triggered on checkpoint resolution"
   ```
 
-- [ ] **Task 41**: Write unit tests in `test/trust/model.test.ts` verifying boundary clamping [0.0, 1.0], penalty calculation on shallow answers, and incremental recovery on strong explanations.
+- [x] **Task 41**: Write unit tests in `test/trust/model.test.ts` verifying boundary clamping [0.0, 1.0], penalty calculation on shallow answers, and incremental recovery on strong explanations.
 
   ```bash
   git commit -m "test: add unit tests for trust score decay and recovery formulas"
