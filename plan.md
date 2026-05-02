@@ -274,7 +274,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement trust score repository and per-file state persistence"
   ```
 
-- [ ] **Task 39**: Build `DynamicThresholdScaler` in `src/core/trust/scaler.ts` that scales line delta limits based on file trust score: lower trust tightens write thresholds, higher trust fades scaffolding.
+- [x] **Task 39**: Build `DynamicThresholdScaler` in `src/core/trust/scaler.ts` that scales line delta limits based on file trust score: lower trust tightens write thresholds, higher trust fades scaffolding.
 
   ```bash
   git commit -m "feat: implement dynamic threshold scaling based on file trust score"
