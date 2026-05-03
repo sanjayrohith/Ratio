@@ -312,7 +312,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement staged write release and commit transaction executor"
   ```
 
-- [ ] **Task 45**: Implement rejection cleanup handler in `src/core/staging/rollback.ts` that purges staged payloads upon checkpoint rejection or cancellation without modifying the target file.
+- [x] **Task 45**: Implement rejection cleanup handler in `src/core/staging/rollback.ts` that purges staged payloads upon checkpoint rejection or cancellation without modifying the target file.
 
   ```bash
   git commit -m "feat: implement staged write rejection and rollback cleanup handler"
