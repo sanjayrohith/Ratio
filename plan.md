@@ -300,7 +300,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 8 (4 tasks) — Staged Write Persistence & Transactional State Machine
 
-- [ ] **Task 43**: Add `pending_writes` table migration and DAO in `src/storage/pending-writes.ts` to persist staged write payloads to disk, ensuring recovery across agent restarts.
+- [x] **Task 43**: Add `pending_writes` table migration and DAO in `src/storage/pending-writes.ts` to persist staged write payloads to disk, ensuring recovery across agent restarts.
 
   ```bash
   git commit -m "feat: implement sqlite-backed pending writes table for atomic transaction safety"

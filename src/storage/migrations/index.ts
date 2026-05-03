@@ -110,6 +110,27 @@ CREATE TRIGGER IF NOT EXISTS checkpoints_au AFTER UPDATE ON checkpoints BEGIN
 END;
 `;
 
+export const PENDING_WRITES_MIGRATION_SQL = `
+CREATE TABLE IF NOT EXISTS pending_writes (
+  ticket_id TEXT PRIMARY KEY,
+  file_path TEXT NOT NULL,
+  content TEXT NOT NULL,
+  operation TEXT NOT NULL, -- 'write' | 'edit'
+  question TEXT NOT NULL,
+  concept TEXT,
+  rationale TEXT,
+  status TEXT NOT NULL DEFAULT 'PENDING', -- 'PENDING' | 'APPROVED' | 'COMMITTED' | 'REJECTED'
+  rejection_reason TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  resolved_at TEXT,
+  metadata TEXT -- JSON encoded metadata
+);
+
+CREATE INDEX IF NOT EXISTS idx_pending_writes_file ON pending_writes(file_path);
+CREATE INDEX IF NOT EXISTS idx_pending_writes_status ON pending_writes(status);
+CREATE INDEX IF NOT EXISTS idx_pending_writes_created_at ON pending_writes(created_at);
+`;
+
 /**
  * Embedded migrations list fallback if running in bundled environment.
  */
@@ -123,6 +144,11 @@ const EMBEDDED_MIGRATIONS: Array<{ version: number; name: string; sql: string }>
     version: 2,
     name: '002_fts5_checkpoints.sql',
     sql: FTS5_MIGRATION_SQL,
+  },
+  {
+    version: 3,
+    name: '003_pending_writes.sql',
+    sql: PENDING_WRITES_MIGRATION_SQL,
   },
 ];
 
@@ -144,7 +170,9 @@ export function runMigrations(db: Database, migrationsDir?: string): number {
 
   let migrations: Array<{ version: number; name: string; sql: string }> = [];
 
-  const targetDir = migrationsDir ?? (existsSync(join(import.meta.dir, '001_initial_schema.sql')) ? import.meta.dir : undefined);
+  const targetDir =
+    migrationsDir ??
+    (existsSync(join(import.meta.dir, '001_initial_schema.sql')) ? import.meta.dir : undefined);
 
   if (targetDir && existsSync(targetDir)) {
     try {
