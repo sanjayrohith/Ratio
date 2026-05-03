@@ -306,7 +306,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement sqlite-backed pending writes table for atomic transaction safety"
   ```
 
-- [ ] **Task 44**: Implement commit transaction executor in `src/core/staging/executor.ts` that loads staged payloads from SQLite, writes to the target path atomically, and marks status as `COMMITTED`.
+- [x] **Task 44**: Implement commit transaction executor in `src/core/staging/executor.ts` that loads staged payloads from SQLite, writes to the target path atomically, and marks status as `COMMITTED`.
 
   ```bash
   git commit -m "feat: implement staged write release and commit transaction executor"
