@@ -318,7 +318,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement staged write rejection and rollback cleanup handler"
   ```
 
-- [ ] **Task 46**: Write tests in `test/staging/lifecycle.test.ts` verifying state transitions: `PENDING` -> `APPROVED` -> `COMMITTED` and `PENDING` -> `REJECTED`, checking database records.
+- [x] **Task 46**: Write tests in `test/staging/lifecycle.test.ts` verifying state transitions: `PENDING` -> `APPROVED` -> `COMMITTED` and `PENDING` -> `REJECTED`, checking database records.
 
   ```bash
   git commit -m "test: add state machine tests for staged write lifecycle transitions"
