@@ -344,7 +344,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement context-aware question selector based on complexity triggers"
   ```
 
-- [ ] **Task 50**: Write unit tests in `test/concepts/catalog.test.ts` verifying that all 15 concepts provide valid probing questions, keyword rubrics, and correct category classifications.
+- [x] **Task 50**: Write unit tests in `test/concepts/catalog.test.ts` verifying that all 15 concepts provide valid probing questions, keyword rubrics, and correct category classifications.
 
   ```bash
   git commit -m "test: add catalog verification tests for question bank completeness"
