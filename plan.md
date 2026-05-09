@@ -338,7 +338,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement question bank catalog with concept-specific probing questions"
   ```
 
-- [ ] **Task 49**: Build `QuestionSelector` in `src/core/concepts/selector.ts` mapping detected architectural layers, touched files, and diff keywords to appropriate Socratic questions.
+- [x] **Task 49**: Build `QuestionSelector` in `src/core/concepts/selector.ts` mapping detected architectural layers, touched files, and diff keywords to appropriate Socratic questions.
 
   ```bash
   git commit -m "feat: implement context-aware question selector based on complexity triggers"
