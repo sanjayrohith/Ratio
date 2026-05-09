@@ -326,7 +326,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 9 (4 tasks) — Socratic Question Bank & Concept Taxonomy
 
-- [ ] **Task 47**: Define taxonomy enums and concept definitions in `src/core/concepts/taxonomy.ts` covering 15 full-stack patterns (JWT secrets, DB migrations, async waterfalls, SQL injection, connection pools, etc.).
+- [x] **Task 47**: Define taxonomy enums and concept definitions in `src/core/concepts/taxonomy.ts` covering 15 full-stack patterns (JWT secrets, DB migrations, async waterfalls, SQL injection, connection pools, etc.).
 
   ```bash
   git commit -m "feat: define core concept taxonomy covering 15 common full-stack patterns"
