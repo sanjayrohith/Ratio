@@ -332,7 +332,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: define core concept taxonomy covering 15 common full-stack patterns"
   ```
 
-- [ ] **Task 48**: Build question bank catalog in `src/core/concepts/catalog.ts` containing targeted Socratic questions focusing on architectural rationale, mechanisms, and trade-offs.
+- [x] **Task 48**: Build question bank catalog in `src/core/concepts/catalog.ts` containing targeted Socratic questions focusing on architectural rationale, mechanisms, and trade-offs.
 
   ```bash
   git commit -m "feat: implement question bank catalog with concept-specific probing questions"
