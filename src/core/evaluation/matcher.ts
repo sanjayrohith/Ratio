@@ -129,12 +129,12 @@ export class ConceptMatcher {
         score = 100;
       } else if (matchedMechanisms.length >= requiredMechanisms) {
         // Met required threshold (e.g. 2 of 3)
-        const keywordBonus = Math.min(15, matchedKeywords.length * 3);
-        score = Math.min(95, 75 + keywordBonus);
+        const keywordBonus = Math.min(10, Math.max(0, matchedKeywords.length - 2) * 2);
+        score = Math.min(90, 80 + keywordBonus);
       } else {
         // Partial match (e.g. 1 of 3)
-        const keywordBonus = Math.min(10, matchedKeywords.length * 2);
-        score = Math.min(55, 40 + keywordBonus);
+        const keywordBonus = Math.min(10, Math.max(0, matchedKeywords.length - 1) * 2);
+        score = Math.min(55, 45 + keywordBonus);
       }
     } else {
       // Generic keyword score
@@ -168,9 +168,9 @@ export class ConceptMatcher {
     } else if (matchedKeywords.length > 0) {
       feedback = `Shallow explanation (score: ${score}/100). Mentioned terms [${matchedKeywords.join(
         ', '
-      )}], but lacked clear explanation of mechanisms: ${missingMechanisms.join(', ')}.`;
+      )}], but missed required mechanisms: ${missingMechanisms.join(', ')}.`;
     } else {
-      feedback = `Insufficient explanation (score: ${score}/100). Did not reference key mechanisms: ${missingMechanisms.join(
+      feedback = `Insufficient explanation (score: ${score}/100). Did not reference required mechanisms: ${missingMechanisms.join(
         ', '
       )}.`;
     }

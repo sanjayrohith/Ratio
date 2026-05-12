@@ -352,19 +352,19 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 10 (3 tasks) — Deterministic Concept & Keyword Evaluation Engine
 
-- [ ] **Task 51**: Define mechanism keyword rubrics, technical synonym dictionaries, and anti-pattern evasion phrases (`idk`, `just do it`, `skip`) in `src/core/evaluation/rubrics.ts`.
+- [x] **Task 51**: Define mechanism keyword rubrics, technical synonym dictionaries, and anti-pattern evasion phrases (`idk`, `just do it`, `skip`) in `src/core/evaluation/rubrics.ts`.
 
   ```bash
   git commit -m "feat: define concept keyword rubrics, anti-patterns, and synonym dictionaries"
   ```
 
-- [ ] **Task 52**: Implement deterministic evaluation engine in `src/core/evaluation/matcher.ts` checking whether the student's answer references required mechanisms without calling external LLMs.
+- [x] **Task 52**: Implement deterministic evaluation engine in `src/core/evaluation/matcher.ts` checking whether the student's answer references required mechanisms without calling external LLMs.
 
   ```bash
   git commit -m "feat: implement fast deterministic keyword matching evaluation engine"
   ```
 
-- [ ] **Task 53**: Author unit tests in `test/evaluation/matcher.test.ts` testing student answers across genuine explanations, partial answers, technical synonyms, and evasive shortcuts.
+- [x] **Task 53**: Author unit tests in `test/evaluation/matcher.test.ts` testing student answers across genuine explanations, partial answers, technical synonyms, and evasive shortcuts.
 
   ```bash
   git commit -m "test: add unit tests for concept matcher across valid and invalid answers"

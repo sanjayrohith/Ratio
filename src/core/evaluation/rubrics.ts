@@ -48,13 +48,10 @@ export const EVASION_PHRASES: readonly string[] = [
 export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
   // Authentication & Secrets
   secret: [
-    'key',
-    'token secret',
-    'private key',
-    'credential',
-    'api key',
     'jwt secret',
-    'signature key',
+    'token secret',
+    'signature secret',
+    'app secret',
   ],
   environment: [
     'env',
@@ -68,6 +65,15 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'secrets manager',
     'vault',
     'dotenv',
+  ],
+  git: [
+    'github',
+    'gitlab',
+    'version control',
+    'vcs',
+    'repo',
+    'repository',
+    'public repo',
   ],
   leak: [
     'exposure',
@@ -105,6 +111,30 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'token rotation',
     'revoke',
     'revocation',
+  ],
+  sign: [
+    'signature',
+    'signing',
+    'signed',
+    'crypto',
+    'cryptographic',
+    'hmac',
+    'rsa',
+  ],
+  verify: [
+    'verification',
+    'verifying',
+    'validate',
+    'validation',
+    'check signature',
+  ],
+  forge: [
+    'forgery',
+    'forged',
+    'tamper',
+    'tampering',
+    'tampered',
+    'manipulated',
   ],
   asymmetric: [
     'rsa',
@@ -169,6 +199,18 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'bind param',
     'prepared',
   ],
+  prepared: [
+    'prepared statement',
+    'prepared statements',
+    'pre-compiled',
+  ],
+  compile: [
+    'compilation',
+    'pre-compiled',
+    'query plan',
+    'ast',
+    'execution plan',
+  ],
   concatenate: [
     'concatenation',
     'string concat',
@@ -195,6 +237,8 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'pooled client',
   ],
   exhaustion: [
+    'exhaust',
+    'exhausts',
     'exhausted',
     'starvation',
     'leak',
@@ -275,6 +319,7 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'surge',
     'flood',
     'traffic peak',
+    'traffic peaks',
     'rate burst',
     'ddos',
     'dos',
@@ -317,6 +362,7 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'random bytes',
     'nonce',
     'per-user salt',
+    'unique salt',
     'salted hash',
   ],
   rainbow: [
@@ -397,7 +443,7 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
   ],
 
   // Workers & Queues
-  idempotency_key: [
+  idempotency: [
     'idempotency key',
     'deduplication id',
     'unique transaction id',
@@ -460,6 +506,7 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'seq scan',
     'o(n) scan',
     'full table scan',
+    'sequential scans',
   ],
   write_penalty: [
     'insert overhead',
@@ -530,7 +577,7 @@ export const CONCEPT_RUBRICS: Record<ConceptId, ConceptRubric> = {
       {
         name: 'Cryptography / Signature Integrity',
         description: 'Protecting token signing, signature verification, and preventing forgery or tampering.',
-        keywords: ['sign', 'signature', 'verify', 'tamper', 'forge', 'hmac', 'secret', 'private key', 'asymmetric'],
+        keywords: ['sign', 'signature', 'verify', 'tamper', 'forge', 'hmac', 'private key', 'asymmetric'],
       },
     ],
   },
@@ -589,7 +636,7 @@ export const CONCEPT_RUBRICS: Record<ConceptId, ConceptRubric> = {
       {
         name: 'Connection Exhaustion & Leaks',
         description: 'Unclosed connections or high concurrency depleting available database sockets.',
-        keywords: ['exhaustion', 'leak', 'unclosed', 'starvation', 'depleted', 'hanging', 'socket leak'],
+        keywords: ['exhaustion', 'exhaust', 'leak', 'unclosed', 'starvation', 'depleted', 'hanging', 'socket leak'],
       },
       {
         name: 'Pool Lifecycle Management',
@@ -869,18 +916,15 @@ export function isEvasionAnswer(answer: string): boolean {
   const normalized = answer
     .toLowerCase()
     .trim()
-    .replace(/[.,!?;:'"()[\]{}]/g, ' ')
+    .replace(/['’]/g, '')
+    .replace(/[.,!?;:"()[\]{}`\\/]/g, ' ')
     .replace(/\s+/g, ' ');
 
   // Direct exact match
-  if (EVASION_PHRASES.includes(normalized)) {
-    return true;
-  }
-
-  // Answer starts with an evasion phrase followed by filler (e.g. "idk just write it", "skip this question")
   for (const phrase of EVASION_PHRASES) {
-    if (normalized === phrase) return true;
-    if (normalized.startsWith(`${phrase} `) && normalized.length < phrase.length + 30) {
+    const cleanPhrase = phrase.replace(/['’]/g, '');
+    if (normalized === cleanPhrase) return true;
+    if (normalized.startsWith(`${cleanPhrase} `) && normalized.length < cleanPhrase.length + 30) {
       return true;
     }
   }
@@ -910,7 +954,7 @@ export function expandSynonyms(keyword: string): string[] {
   // Check if kwLower is inside any synonym array
   for (const [canonical, syns] of Object.entries(TECHNICAL_SYNONYMS)) {
     const synsLower = syns.map((s) => s.toLowerCase());
-    if (synsLower.includes(kwLower) || canonical.toLowerCase() === kwLower) {
+    if (synsLower.includes(kwLower)) {
       results.add(canonical.toLowerCase());
       for (const s of synsLower) {
         results.add(s);
