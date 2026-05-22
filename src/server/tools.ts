@@ -17,6 +17,12 @@ import {
   type WritePermittedResponse,
 } from '../types/protocol.js';
 
+import {
+  RATIO_SUBMIT_ANSWER_TOOL,
+  handleSubmitAnswer,
+  type SubmitAnswerDependencies,
+} from './tools/submit-answer.js';
+
 export const RATIO_TOOLS = [
   {
     name: 'ratio_write_file',
@@ -86,6 +92,7 @@ export const RATIO_TOOLS = [
       required: ['path', 'edits'],
     },
   },
+  RATIO_SUBMIT_ANSWER_TOOL,
 ] as const;
 
 /**
@@ -94,7 +101,8 @@ export const RATIO_TOOLS = [
 export function registerTools(
   server: Server,
   stagingBuffer: StagingBuffer = defaultStagingBuffer,
-  scorer: ComplexityScorer = defaultComplexityScorer
+  scorer: ComplexityScorer = defaultComplexityScorer,
+  deps: SubmitAnswerDependencies = {}
 ): void {
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
@@ -237,6 +245,22 @@ export function registerTools(
         instruction:
           'Do not modify the file yet. Relay this question to the user and call ratio_submit_answer with this ticketId.',
       };
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(response, null, 2),
+          },
+        ],
+      };
+    }
+
+    if (name === 'ratio_submit_answer') {
+      const response = await handleSubmitAnswer(rawArgs, {
+        stagingBuffer,
+        ...deps,
+      });
 
       return {
         content: [

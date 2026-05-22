@@ -4,6 +4,7 @@ import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import type { ComplexityScorer } from '../core/scorer/index.js';
 import type { StagingBuffer } from '../core/staging/buffer.js';
 import { registerTools } from './tools.js';
+import type { SubmitAnswerDependencies } from './tools/submit-answer.js';
 
 export const SERVER_NAME = 'ratio';
 export const SERVER_VERSION = '0.1.0';
@@ -13,7 +14,8 @@ export const SERVER_VERSION = '0.1.0';
  */
 export function createRatioServer(
   stagingBuffer?: StagingBuffer,
-  scorer?: ComplexityScorer
+  scorer?: ComplexityScorer,
+  deps?: SubmitAnswerDependencies
 ): Server {
   const server = new Server(
     {
@@ -27,7 +29,7 @@ export function createRatioServer(
     }
   );
 
-  registerTools(server, stagingBuffer, scorer);
+  registerTools(server, stagingBuffer, scorer, deps);
 
   return server;
 }

@@ -74,11 +74,12 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
 
     const result = await client.listTools();
 
-    expect(result.tools).toHaveLength(2);
+    expect(result.tools).toHaveLength(3);
 
     const toolNames = result.tools.map((t) => t.name);
     expect(toolNames).toContain('ratio_write_file');
     expect(toolNames).toContain('ratio_edit_file');
+    expect(toolNames).toContain('ratio_submit_answer');
 
     const writeTool = result.tools.find((t) => t.name === 'ratio_write_file');
     expect(writeTool).toBeDefined();
@@ -90,6 +91,11 @@ describe('Ratio MCP Server Handshake & Tool Interception', () => {
     expect(editTool).toBeDefined();
     expect(editTool?.inputSchema.properties).toHaveProperty('path');
     expect(editTool?.inputSchema.properties).toHaveProperty('edits');
+
+    const submitAnswerTool = result.tools.find((t) => t.name === 'ratio_submit_answer');
+    expect(submitAnswerTool).toBeDefined();
+    expect(submitAnswerTool?.inputSchema.properties).toHaveProperty('ticket_id');
+    expect(submitAnswerTool?.inputSchema.properties).toHaveProperty('answer');
 
     await client.close();
     await server.close();
