@@ -160,6 +160,28 @@ export function registerTools(
         },
       });
 
+      if (deps.pendingRepo) {
+        deps.pendingRepo.insert({
+          ticketId: staged.ticketId,
+          filePath: staged.file,
+          content: staged.content,
+          operation: 'write',
+          question: staged.question,
+          concept: staged.concept,
+          rationale: staged.rationale,
+          metadata: staged.metadata,
+        });
+      }
+
+      if (deps.checkpointRepo) {
+        deps.checkpointRepo.insertCheckpoint({
+          ticketId: staged.ticketId,
+          filePath: staged.file,
+          question: staged.question,
+          concept: staged.concept ?? 'ARCHITECTURAL_RATIONALE',
+        });
+      }
+
       const response: CheckpointResponse = {
         status: 'checkpoint_required',
         ticketId: staged.ticketId,
@@ -233,6 +255,28 @@ export function registerTools(
           dependencyDiff: evaluation.dependencyDiff,
         },
       });
+
+      if (deps.pendingRepo) {
+        deps.pendingRepo.insert({
+          ticketId: staged.ticketId,
+          filePath: staged.file,
+          content: staged.content,
+          operation: 'edit',
+          question: staged.question,
+          concept: staged.concept,
+          rationale: staged.rationale,
+          metadata: staged.metadata,
+        });
+      }
+
+      if (deps.checkpointRepo) {
+        deps.checkpointRepo.insertCheckpoint({
+          ticketId: staged.ticketId,
+          filePath: staged.file,
+          question: staged.question,
+          concept: staged.concept ?? 'ARCHITECTURAL_RATIONALE',
+        });
+      }
 
       const response: CheckpointResponse = {
         status: 'checkpoint_required',

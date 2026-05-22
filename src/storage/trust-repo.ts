@@ -1,5 +1,9 @@
 import { Database } from 'bun:sqlite';
-import { DEFAULT_TRUST_SCORE_CONFIG, clampScore } from '../core/trust/model.js';
+import {
+  DEFAULT_TRUST_SCORE_CONFIG,
+  TrustScoreConfig,
+  clampScore,
+} from '../core/trust/model.js';
 
 export interface TrustScoreRecord {
   file_path: string;
@@ -18,11 +22,14 @@ export interface UpsertTrustScoreInput {
 }
 
 export class TrustScoreRepository {
-  constructor(private readonly db: Database) {}
+  constructor(
+    private readonly db: Database,
+    private readonly config: TrustScoreConfig = DEFAULT_TRUST_SCORE_CONFIG
+  ) {}
 
   /**
    * Retrieves trust score record for a given file path.
-   * If not yet tracked in the database, returns a default record with initialScore (1.0).
+   * If not yet tracked in the database, returns a default record with initialScore.
    */
   getOrCreate(filePath: string): TrustScoreRecord {
     const existing = this.get(filePath);
@@ -31,7 +38,7 @@ export class TrustScoreRepository {
     }
 
     const now = new Date().toISOString();
-    const defaultScore = DEFAULT_TRUST_SCORE_CONFIG.initialScore;
+    const defaultScore = this.config.initialScore;
 
     this.db.run(
       `

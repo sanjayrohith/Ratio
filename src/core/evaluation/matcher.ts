@@ -74,7 +74,8 @@ export class ConceptMatcher {
       .replace(/[.,!?;:'"()[\]{}`\\/]/g, ' ')
       .replace(/\s+/g, ' ');
 
-    const rubric = CONCEPT_RUBRICS[conceptId as ConceptId];
+    const rubric = this.resolveRubric(conceptId, rawLower);
+    const targetConceptId = rubric ? rubric.conceptId : conceptId;
     const matchedKeywordsSet = new Set<string>();
     const matchedMechanisms: string[] = [];
     const missingMechanisms: string[] = [];
@@ -179,7 +180,7 @@ export class ConceptMatcher {
       passed,
       score,
       isEvasive: false,
-      conceptId,
+      conceptId: targetConceptId,
       matchedKeywords,
       matchedMechanisms,
       missingMechanisms,
@@ -251,8 +252,80 @@ export class ConceptMatcher {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  private getMechanismNames(conceptId: ConceptId | string): string[] {
-    const rubric = CONCEPT_RUBRICS[conceptId as ConceptId];
+  private resolveRubric(
+    conceptId: ConceptId | string,
+    rawLower: string
+  ): ConceptRubric | undefined {
+    if (CONCEPT_RUBRICS[conceptId as ConceptId]) {
+      return CONCEPT_RUBRICS[conceptId as ConceptId];
+    }
+
+    const conceptStr = String(conceptId).toUpperCase();
+
+    if (conceptStr === 'AUTHENTICATION_ARCHITECTURE') {
+      if (
+        rawLower.includes('password') ||
+        rawLower.includes('hash') ||
+        rawLower.includes('salt') ||
+        rawLower.includes('bcrypt')
+      ) {
+        return CONCEPT_RUBRICS[ConceptId.PASSWORD_HASHING_SALT];
+      }
+      return CONCEPT_RUBRICS[ConceptId.JWT_SECRET_HYGIENE];
+    }
+
+    if (conceptStr === 'DATABASE_INTEGRITY') {
+      if (
+        rawLower.includes('parameter') ||
+        rawLower.includes('injection') ||
+        rawLower.includes('prepared') ||
+        rawLower.includes('bind') ||
+        rawLower.includes('placeholder')
+      ) {
+        return CONCEPT_RUBRICS[ConceptId.SQL_INJECTION_PREVENTION];
+      }
+      return CONCEPT_RUBRICS[ConceptId.DB_MIGRATION_IDEMPOTENCY];
+    }
+
+    if (conceptStr === 'DEPENDENCY_ADDITION') {
+      return CONCEPT_RUBRICS[ConceptId.INPUT_VALIDATION_SANITIZATION];
+    }
+
+    // If general architectural rationale or multi-layer change, match across all concept rubrics
+    if (
+      conceptStr === 'ARCHITECTURAL_RATIONALE' ||
+      conceptStr === 'MULTI_LAYER_CHANGE' ||
+      conceptStr === 'MULTI_LAYER_CROSSING'
+    ) {
+      let bestRubric: ConceptRubric | undefined;
+      let maxMatches = 0;
+      for (const r of Object.values(CONCEPT_RUBRICS)) {
+        let matches = 0;
+        for (const m of r.mechanisms) {
+          for (const kw of m.keywords) {
+            if (rawLower.includes(kw.toLowerCase())) {
+              matches++;
+            }
+          }
+        }
+        if (matches > maxMatches) {
+          maxMatches = matches;
+          bestRubric = r;
+        }
+      }
+      if (maxMatches >= 2) {
+        return bestRubric;
+      }
+      if (conceptStr === 'MULTI_LAYER_CHANGE' || conceptStr === 'MULTI_LAYER_CROSSING') {
+        return CONCEPT_RUBRICS[ConceptId.ASYNC_WATERFALL_MITIGATION];
+      }
+    }
+
+    return undefined;
+  }
+
+  private getMechanismNames(conceptId: ConceptId | string, rawLower = ''): string[] {
+    const rubric = this.resolveRubric(conceptId, rawLower);
     return rubric ? rubric.mechanisms.map((m) => m.name) : ['Core Architectural Rationale'];
   }
 }

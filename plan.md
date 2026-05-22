@@ -372,25 +372,25 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 11 (4 tasks) — Answer Submission MCP Tool & Resolution Loop
 
-- [ ] **Task 54**: Implement and register `ratio_submit_answer` MCP tool in `src/server/tools/submit-answer.ts`, taking `ticket_id` and `answer` text, and delegating to evaluation engine.
+- [x] **Task 54**: Implement and register `ratio_submit_answer` MCP tool in `src/server/tools/submit-answer.ts`, taking `ticket_id` and `answer` text, and delegating to evaluation engine.
 
   ```bash
   git commit -m "feat: implement ratio_submit_answer mcp tool handler"
   ```
 
-- [ ] **Task 55**: Implement shallow answer rejection in `src/core/evaluation/follow-up.ts`, returning a guiding hint and follow-up prompt when answers lack mechanistic understanding.
+- [x] **Task 55**: Implement shallow answer rejection in `src/core/evaluation/follow-up.ts`, returning a guiding hint and follow-up prompt when answers lack mechanistic understanding.
 
   ```bash
   git commit -m "feat: implement shallow answer rejection and graduated follow-up generation"
   ```
 
-- [ ] **Task 56**: Integrate evaluation outcome with `TrustScoreRepository` and staging executor: approve and flush write on success, or penalize file trust on failure.
+- [x] **Task 56**: Integrate evaluation outcome with `TrustScoreRepository` and staging executor: approve and flush write on success, or penalize file trust on failure.
 
   ```bash
   git commit -m "feat: connect answer evaluation result to trust score update and write release"
   ```
 
-- [ ] **Task 57**: Author integration tests in `test/integration/answer-loop.test.ts` simulating the full write -> checkpoint -> submit answer -> evaluate -> commit filesystem flow.
+- [x] **Task 57**: Author integration tests in `test/integration/answer-loop.test.ts` simulating the full write -> checkpoint -> submit answer -> evaluate -> commit filesystem flow.
 
   ```bash
   git commit -m "test: add integration tests for full checkpoint-answer-evaluation loop"
