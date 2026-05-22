@@ -146,15 +146,19 @@ export async function handleSubmitAnswer(
       }
     }
 
-    // Update trust score on pass if coordinator or repository available
-    if (deps.trustCoordinator && deps.checkpointRepo) {
+    // Record student answer first if checkpointRepo is present
+    if (deps.checkpointRepo) {
       try {
-        deps.trustCoordinator.resolveCheckpointAnswer({
-          ticketId,
-          status: 'passed',
-          evaluationScore: evaluation.score,
-          evaluationReason: evaluation.feedback,
-        });
+        deps.checkpointRepo.recordAnswer({ ticketId, studentAnswer: answer });
+      } catch {
+        // Ignored if checkpoint not present in SQLite checkpoints table
+      }
+    }
+
+    // Update trust score on pass if coordinator or repository available
+    if (deps.trustCoordinator) {
+      try {
+        deps.trustCoordinator.applyEvaluationOutcome(ticketId, evaluation);
       } catch {
         // Fallback to direct repo if ticket not in checkpoints table
         if (deps.trustRepo) {
@@ -165,20 +169,6 @@ export async function handleSubmitAnswer(
     } else if (deps.trustRepo) {
       const current = deps.trustRepo.getOrCreate(filePath);
       deps.trustRepo.recordPass(filePath, current.score + 0.1);
-    }
-
-    if (deps.checkpointRepo) {
-      try {
-        deps.checkpointRepo.recordAnswer({ ticketId, studentAnswer: answer });
-        deps.checkpointRepo.resolveCheckpoint({
-          ticketId,
-          status: 'passed',
-          evaluationScore: evaluation.score,
-          evaluationReason: evaluation.feedback,
-        });
-      } catch {
-        // Ignored if checkpoint not present in SQLite checkpoints table
-      }
     }
 
     return {
@@ -192,14 +182,17 @@ export async function handleSubmitAnswer(
   }
 
   // Answer was shallow, evasive, or failed mechanisms
-  if (deps.trustCoordinator && deps.checkpointRepo) {
+  if (deps.checkpointRepo) {
     try {
-      deps.trustCoordinator.resolveCheckpointAnswer({
-        ticketId,
-        status: 'failed',
-        evaluationScore: evaluation.score,
-        evaluationReason: evaluation.feedback,
-      });
+      deps.checkpointRepo.recordAnswer({ ticketId, studentAnswer: answer });
+    } catch {
+      // Ignored
+    }
+  }
+
+  if (deps.trustCoordinator) {
+    try {
+      deps.trustCoordinator.applyEvaluationOutcome(ticketId, evaluation);
     } catch {
       if (deps.trustRepo) {
         const current = deps.trustRepo.getOrCreate(filePath);
@@ -209,14 +202,6 @@ export async function handleSubmitAnswer(
   } else if (deps.trustRepo) {
     const current = deps.trustRepo.getOrCreate(filePath);
     deps.trustRepo.recordFailure(filePath, current.score - 0.25);
-  }
-
-  if (deps.checkpointRepo) {
-    try {
-      deps.checkpointRepo.recordAnswer({ ticketId, studentAnswer: answer });
-    } catch {
-      // Ignored
-    }
   }
 
   const followUp = followUpGen.generate({

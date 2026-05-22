@@ -108,4 +108,22 @@ export class TrustScoreCoordinator {
   getFileTrustScore(filePath: string): TrustScoreRecord {
     return this.trustRepo.getOrCreate(filePath);
   }
+
+  /**
+   * Applies the outcome of an answer evaluation to both the checkpoint ledger
+   * and the per-file trust score repository.
+   */
+  public applyEvaluationOutcome(
+    ticketId: string,
+    evaluation: { passed: boolean; score: number; feedback?: string },
+    customDelta?: number
+  ): TrustResolutionResult {
+    return this.resolveCheckpointAnswer({
+      ticketId,
+      status: evaluation.passed ? 'passed' : 'failed',
+      evaluationScore: evaluation.score,
+      evaluationReason: evaluation.feedback ?? null,
+      customTrustDelta: customDelta,
+    });
+  }
 }
