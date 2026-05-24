@@ -130,6 +130,13 @@ export class QuestionSelector {
       );
     }
 
+    if (this.hasKeywords(diffLower, ['componentdidcatch', 'getderivedstatefromerror', 'errorboundary', 'error-boundary'])) {
+      return this.pickQuestion(
+        ConceptId.ERROR_BOUNDARY,
+        'Detected React error boundary or UI fault isolation.'
+      );
+    }
+
     if (this.hasKeywords(diffLower, ['try {', 'catch', 'throw new', 'next(err)', 'errorhandler'])) {
       return this.pickQuestion(
         ConceptId.ERROR_HANDLING_LEAKAGE,
@@ -144,19 +151,13 @@ export class QuestionSelector {
       );
     }
 
-    if (this.hasKeywords(diffLower, ['immer', 'produce(', '...state', 'shallow copy', 'structural sharing', 'direct mutation'])) {
+    if (this.hasKeywords(diffLower, ['immer', 'produce(', '...state', '...prev', 'shallow copy', 'structural sharing', 'direct mutation', 'mutate', 'mutating'])) {
       return this.pickQuestion(
         ConceptId.STATE_IMMUTABILITY,
         'Detected state mutation prevention or immutable structural sharing.'
       );
     }
 
-    if (this.hasKeywords(diffLower, ['componentdidcatch', 'getderivedstatefromerror', 'errorboundary', 'error-boundary'])) {
-      return this.pickQuestion(
-        ConceptId.ERROR_BOUNDARY,
-        'Detected React error boundary or UI fault isolation.'
-      );
-    }
 
     // 2. Check file path heuristics
     if (filePathLower.includes('migration') || filePathLower.endsWith('.sql')) {

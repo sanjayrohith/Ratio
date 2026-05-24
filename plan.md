@@ -398,35 +398,36 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 12 (5 tasks) — Concept Map Expansion & Evaluation Refinement
 
-- [ ] **Task 58**: Add concepts, questions, and rubrics in `src/core/concepts/catalog.ts` for React re-render loops (`STATE_RENDER_LOOP`), mutation bugs (`STATE_IMMUTABILITY`), and cache invalidation.
+- [x] **Task 58**: Add concepts, questions, and rubrics in `src/core/concepts/catalog.ts` for React re-render loops (`STATE_RENDER_LOOP`), mutation bugs (`STATE_IMMUTABILITY`), and cache invalidation.
 
   ```bash
   git commit -m "feat: expand concept catalog with state management and caching patterns"
   ```
 
-- [ ] **Task 59**: Add concepts, questions, and rubrics for API idempotency keys (`API_IDEMPOTENCY`), rate limiting algorithms (`RATE_LIMITING`), and error boundaries (`ERROR_BOUNDARY`).
+- [x] **Task 59**: Add concepts, questions, and rubrics for API idempotency keys (`API_IDEMPOTENCY`), rate limiting algorithms (`RATE_LIMITING`), and error boundaries (`ERROR_BOUNDARY`).
 
   ```bash
   git commit -m "feat: expand concept catalog with api design and error boundary patterns"
   ```
 
-- [ ] **Task 60**: Build normalizer in `src/core/evaluation/normalizer.ts` handling lowercase conversion, punctuation stripping, word stemming, and pluralization tolerance.
+- [x] **Task 60**: Build normalizer in `src/core/evaluation/normalizer.ts` handling lowercase conversion, punctuation stripping, word stemming, and pluralization tolerance.
 
   ```bash
   git commit -m "feat: implement fuzzy token matching and pluralization normalizer for evaluation"
   ```
 
-- [ ] **Task 61**: Extend `checkpoints` table migration and repository methods to record numeric concept coverage scores (0-100), detected keywords, and evasion indicators.
+- [x] **Task 61**: Extend `checkpoints` table migration and repository methods to record numeric concept coverage scores (0-100), detected keywords, and evasion indicators.
 
   ```bash
   git commit -m "feat: add explanation quality scoring metrics to checkpoint ledger"
   ```
 
-- [ ] **Task 62**: Add unit tests in `test/concepts/expanded.test.ts` and `test/evaluation/normalizer.test.ts` verifying fuzzy matching, stemming, and evaluation for newly added concepts.
+- [x] **Task 62**: Add unit tests in `test/concepts/expanded.test.ts` and `test/evaluation/normalizer.test.ts` verifying fuzzy matching, stemming, and evaluation for newly added concepts.
 
   ```bash
   git commit -m "test: add test coverage for expanded concept questions and normalized evaluation"
   ```
+
 
 ### Phase 13 (7 tasks) — CLI Framework & Project Bootstrap (`ratio init`)
 

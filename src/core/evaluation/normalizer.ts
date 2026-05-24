@@ -48,10 +48,11 @@ export class TextNormalizer {
     return text
       .toLowerCase()
       .replace(/['’]/g, '') // strip apostrophes for contractions (e.g. don't -> dont)
-      .replace(/[.,!?;:"()[\]{}`\\/<>@#$%^&*~+=_|]/g, ' ')
+      .replace(/[-.,!?;:"()[\]{}`\\/<>@#$%^&*~+=_|]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   }
+
 
   /**
    * Splits normalized text into individual words/tokens.
@@ -110,15 +111,28 @@ export class TextNormalizer {
       return w;
     }
 
-    // -ation / -ition / -tion (invalidation -> invalid, mutation -> mutat, isolation -> isolat)
+    // -ized / -ize (parameterized -> parameter, serialize -> serial)
+    if (w.endsWith('ized') && w.length > 6) {
+      return w.slice(0, -4);
+    }
+    if (w.endsWith('ize') && w.length > 5) {
+      return w.slice(0, -3);
+    }
+
+    // -able / -ible (repeatable -> repeat)
+    if ((w.endsWith('able') || w.endsWith('ible')) && w.length > 5) {
+      return w.slice(0, -4);
+    }
+
+    // -ation / -ition / -tion (invalidation -> invalidat, mutation -> mutat, isolation -> isolat)
     if (w.endsWith('ation') && w.length > 6) {
-      return w.slice(0, -5);
+      return w.slice(0, -3);
     }
     if (w.endsWith('ition') && w.length > 6) {
-      return w.slice(0, -5);
+      return w.slice(0, -3);
     }
     if (w.endsWith('tion') && w.length > 5) {
-      return w.slice(0, -4);
+      return w.slice(0, -3);
     }
 
     // -ing (locking -> lock, caching -> cach, signing -> sign, pooling -> pool)
@@ -148,17 +162,9 @@ export class TextNormalizer {
       return base;
     }
 
-    // -able / -ible (repeatable -> repeat)
-    if ((w.endsWith('able') || w.endsWith('ible')) && w.length > 5) {
-      return w.slice(0, -4);
-    }
-
-    // -ize / -ized (parameterized -> parameter, serialize -> serial)
-    if (w.endsWith('ized') && w.length > 6) {
-      return w.slice(0, -4);
-    }
-    if (w.endsWith('ize') && w.length > 5) {
-      return w.slice(0, -3);
+    // Trailing -e on longer words (cache -> cach, mutate -> mutat, isolate -> isolat)
+    if (w.endsWith('e') && !w.endsWith('ee') && w.length > 4) {
+      return w.slice(0, -1);
     }
 
     return w;
