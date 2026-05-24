@@ -74,10 +74,17 @@ export class QuestionSelector {
       );
     }
 
-    if (this.hasKeywords(diffLower, ['ratelimit', 'limiter', 'tokenbucket', '429', 'throttling'])) {
+    if (this.hasKeywords(diffLower, ['ratelimit', 'rate-limit', 'tokenbucket', 'token_bucket', 'leaky_bucket', 'sliding_window', '429', 'throttling'])) {
       return this.pickQuestion(
-        ConceptId.RATE_LIMITING_DOS,
-        'Detected request rate limiting or denial of service protection rules.'
+        ConceptId.RATE_LIMITING,
+        'Detected request rate limiting or traffic throttling algorithm.'
+      );
+    }
+
+    if (this.hasKeywords(diffLower, ['idempotency-key', 'idempotency_key', 'idempotent-key'])) {
+      return this.pickQuestion(
+        ConceptId.API_IDEMPOTENCY,
+        'Detected API idempotency key header or replay safety handling.'
       );
     }
 
@@ -141,6 +148,13 @@ export class QuestionSelector {
       return this.pickQuestion(
         ConceptId.STATE_IMMUTABILITY,
         'Detected state mutation prevention or immutable structural sharing.'
+      );
+    }
+
+    if (this.hasKeywords(diffLower, ['componentdidcatch', 'getderivedstatefromerror', 'errorboundary', 'error-boundary'])) {
+      return this.pickQuestion(
+        ConceptId.ERROR_BOUNDARY,
+        'Detected React error boundary or UI fault isolation.'
       );
     }
 

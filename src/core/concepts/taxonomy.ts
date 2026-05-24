@@ -21,6 +21,9 @@ export enum ConceptId {
   ERROR_HANDLING_LEAKAGE = 'error_handling_leakage',
   STATE_RENDER_LOOP = 'state_render_loop',
   STATE_IMMUTABILITY = 'state_immutability',
+  API_IDEMPOTENCY = 'api_idempotency',
+  RATE_LIMITING = 'rate_limiting',
+  ERROR_BOUNDARY = 'error_boundary',
 }
 
 export interface ConceptDefinition {
@@ -168,5 +171,29 @@ export const CONCEPT_DEFINITIONS: Record<ConceptId, ConceptDefinition> = {
     description: 'Preserving immutable state trees with shallow copies and structural sharing for predictable UI change detection.',
     architecturalRisks: ['Direct state mutations in-place', 'Dropped UI updates from reference equality checks', 'Unintended state corruption across components'],
     recommendedPatterns: ['Object and array spread syntax', 'Immutability helpers (Immer, shallow copy)', 'Pure reducer functions'],
+  },
+  [ConceptId.API_IDEMPOTENCY]: {
+    id: ConceptId.API_IDEMPOTENCY,
+    name: 'API Idempotency & Replay Safety',
+    category: 'api',
+    description: 'Using Idempotency-Key headers, atomic reservation locks, and cached response payloads to prevent duplicate execution of mutating HTTP operations.',
+    architecturalRisks: ['Duplicate financial charges or orders', 'Double-submission on network timeout retries', 'Race conditions during concurrent identical requests'],
+    recommendedPatterns: ['Idempotency-Key header processing', 'Atomic Redis/database reservation locks with TTL', 'Idempotent payload response caching'],
+  },
+  [ConceptId.RATE_LIMITING]: {
+    id: ConceptId.RATE_LIMITING,
+    name: 'API Rate Limiting Algorithms',
+    category: 'api',
+    description: 'Applying token bucket, leaky bucket, sliding window counter, and fixed window algorithms to safeguard APIs against traffic bursts and abuse.',
+    architecturalRisks: ['API denial of service (DoS)', 'Unbounded database connection spikes', 'Resource starvation from noisy neighbors', 'Cascading downstream service failures'],
+    recommendedPatterns: ['Token bucket algorithm for burst handling', 'Sliding window log/counter in Redis', 'Standardized 429 Too Many Requests with Retry-After headers'],
+  },
+  [ConceptId.ERROR_BOUNDARY]: {
+    id: ConceptId.ERROR_BOUNDARY,
+    name: 'UI Error Boundaries & Fault Isolation',
+    category: 'ui',
+    description: 'Catching JavaScript rendering errors in component sub-trees, logging diagnostics, and rendering fallback UI without crashing the entire web application.',
+    architecturalRisks: ['White screen of death (WSOD)', 'Complete application crash from single corrupted widget', 'Uncaught runtime exceptions unmounting root tree'],
+    recommendedPatterns: ['React componentDidCatch / getDerivedStateFromError boundaries', 'Localized sub-tree error boundaries', 'User-friendly fallback UI with retry triggers', 'Client error reporting (Sentry)'],
   },
 };

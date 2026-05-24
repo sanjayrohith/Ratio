@@ -384,6 +384,87 @@ export const QUESTION_CATALOG: Record<ConceptId, SocraticQuestion[]> = {
       expectedKeywords: ['spread', 'nested', 'immer', 'proxy', 'boilerplate', 'performance'],
     },
   ],
+
+  [ConceptId.API_IDEMPOTENCY]: [
+    {
+      id: 'api_idempotency_key_mechanism',
+      conceptId: ConceptId.API_IDEMPOTENCY,
+      question: 'Why should mutating API endpoints accept an Idempotency-Key header, and how does the server process duplicate requests with the same key?',
+      focus: 'mechanism',
+      hint: 'When network timeouts occur, clients retry requests; the server must detect duplicate keys and return the previously cached response without re-executing business logic.',
+      expectedKeywords: ['idempotency-key', 'retry', 'duplicate', 'cache', 'timeout', 'replay'],
+    },
+    {
+      id: 'api_idempotency_concurrent_lock',
+      conceptId: ConceptId.API_IDEMPOTENCY,
+      question: 'How do distributed reservation locks prevent race conditions when two identical requests arrive simultaneously with the same idempotency key?',
+      focus: 'rationale',
+      hint: 'An atomic reservation lock ensures only one in-flight request can process the operation while concurrent duplicates wait or reject.',
+      expectedKeywords: ['lock', 'atomic', 'race condition', 'concurrent', 'reservation', 'in-flight'],
+    },
+    {
+      id: 'api_idempotency_storage_tradeoff',
+      conceptId: ConceptId.API_IDEMPOTENCY,
+      question: 'What are the architectural trade-offs between persisting idempotency records in an in-memory cache (Redis) versus the primary transactional database?',
+      focus: 'tradeoff',
+      hint: 'Redis provides high throughput and automatic TTL expiry, whereas the primary database guarantees ACID transactional consistency with the mutated record.',
+      expectedKeywords: ['redis', 'transactional', 'ttl', 'consistency', 'acid', 'trade-off'],
+    },
+  ],
+
+  [ConceptId.RATE_LIMITING]: [
+    {
+      id: 'rate_limiting_token_bucket',
+      conceptId: ConceptId.RATE_LIMITING,
+      question: 'How does the Token Bucket algorithm differ from Fixed Window rate limiting, and why does Fixed Window suffer from boundary traffic bursts?',
+      focus: 'mechanism',
+      hint: 'In fixed window algorithms, double the rate limit can be consumed across window boundaries (e.g. at 00:59 and 01:01).',
+      expectedKeywords: ['token bucket', 'fixed window', 'boundary', 'burst', 'refill', 'spike'],
+    },
+    {
+      id: 'rate_limiting_http_headers',
+      conceptId: ConceptId.RATE_LIMITING,
+      question: 'Why should rate limiting responses include standard HTTP headers (X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After)?',
+      focus: 'rationale',
+      hint: 'Standard headers allow well-behaved API clients to throttle their requests proactively without hitting repeated 429 errors.',
+      expectedKeywords: ['retry-after', '429', 'headers', 'throttle', 'remaining', 'client'],
+    },
+    {
+      id: 'rate_limiting_gateway_vs_middleware',
+      conceptId: ConceptId.RATE_LIMITING,
+      question: 'What trade-offs exist between implementing rate limiting at an API gateway/reverse proxy versus inside application middleware?',
+      focus: 'tradeoff',
+      hint: 'Gateway rate limiting drops malicious traffic before it reaches application processes, but application-level rate limiting allows fine-grained per-user or per-tier rules.',
+      expectedKeywords: ['gateway', 'middleware', 'reverse proxy', 'cloudflare', 'per-user', 'overhead'],
+    },
+  ],
+
+  [ConceptId.ERROR_BOUNDARY]: [
+    {
+      id: 'error_boundary_lifecycle_mechanism',
+      conceptId: ConceptId.ERROR_BOUNDARY,
+      question: 'How do React Error Boundaries prevent the "White Screen of Death" by catching errors in component lifecycles, and what lifecycle methods must they implement?',
+      focus: 'mechanism',
+      hint: 'Error boundaries implement getDerivedStateFromError to render fallback UI and componentDidCatch to report error telemetry.',
+      expectedKeywords: ['componentdidcatch', 'getderivedstatefromerror', 'fallback', 'crash', 'sub-tree', 'white screen'],
+    },
+    {
+      id: 'error_boundary_scope_limitations',
+      conceptId: ConceptId.ERROR_BOUNDARY,
+      question: 'Why can React Error Boundaries NOT catch errors inside asynchronous callbacks (like setTimeout or fetch) or event handlers?',
+      focus: 'rationale',
+      hint: 'Asynchronous code and event handlers run outside the React component rendering and reconciliation lifecycle.',
+      expectedKeywords: ['asynchronous', 'event handler', 'settimeout', 'rendering', 'reconciliation', 'outside lifecycle'],
+    },
+    {
+      id: 'error_boundary_granularity_tradeoff',
+      conceptId: ConceptId.ERROR_BOUNDARY,
+      question: 'What are the architectural trade-offs between placing a single global Error Boundary at the root versus localized boundaries around individual widgets?',
+      focus: 'tradeoff',
+      hint: 'A root boundary prevents blank screens but still unmounts the entire app; localized boundaries isolate failure to a single widget while keeping the rest of the application fully functional.',
+      expectedKeywords: ['granularity', 'localized', 'fault isolation', 'widget', 'root', 'unmount'],
+    },
+  ],
 };
 
 export { CONCEPT_RUBRICS, type ConceptRubric, type MechanismGroup } from '../evaluation/rubrics.js';

@@ -589,6 +589,34 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'same reference',
     'reference comparison',
   ],
+  'idempotency-key': [
+    'idempotency key',
+    'idempotent key',
+    'unique request key',
+    'idempotency token',
+    'request deduplication',
+  ],
+  'distributed lock': [
+    'atomic lock',
+    'redis lock',
+    'redlock',
+    'mutex',
+    'setnx',
+    'reservation lock',
+  ],
+  componentdidcatch: [
+    'error boundary',
+    'error boundaries',
+    'getderivedstatefromerror',
+    'react error boundary',
+  ],
+  'fault isolation': [
+    'blast radius',
+    'isolated failure',
+    'graceful degradation',
+    'localized error',
+    'sub-tree boundary',
+  ],
 };
 
 /**
@@ -1002,6 +1030,75 @@ export const CONCEPT_RUBRICS: Record<ConceptId, ConceptRubric> = {
         name: 'Direct Mutation Hazards',
         description: 'Direct array or object property mutation circumvents state tracking and introduces silent UI bugs.',
         keywords: ['direct mutation', 'mutate', 'push', 'splice', 'in-place', 'stale ui', 'side-effect'],
+      },
+    ],
+  },
+
+  [ConceptId.API_IDEMPOTENCY]: {
+    conceptId: ConceptId.API_IDEMPOTENCY,
+    name: 'API Idempotency & Replay Safety',
+    minDistinctMechanisms: 2,
+    mechanisms: [
+      {
+        name: 'Idempotency Key & Header Processing',
+        description: 'Using unique request keys (Idempotency-Key header) to identify and deduplicate repeated requests.',
+        keywords: ['idempotency-key', 'idempotency key', 'idempotent', 'unique request key', 'header', 'deduplication', 'retry'],
+      },
+      {
+        name: 'In-Flight Locking & Race Prevention',
+        description: 'Acquiring an atomic reservation lock (e.g. Redis SETNX) to ensure only one in-flight request processes.',
+        keywords: ['atomic lock', 'distributed lock', 'setnx', 'reservation', 'concurrent', 'race condition', 'in-flight', 'mutex'],
+      },
+      {
+        name: 'Cached Response Replay & TTL',
+        description: 'Caching processed response payloads with TTL to return identical results upon duplicate retry.',
+        keywords: ['cached response', 'replay response', 'save response', 'ttl', 'replay', 'duplicate request', 'timeout'],
+      },
+    ],
+  },
+
+  [ConceptId.RATE_LIMITING]: {
+    conceptId: ConceptId.RATE_LIMITING,
+    name: 'API Rate Limiting Algorithms',
+    minDistinctMechanisms: 2,
+    mechanisms: [
+      {
+        name: 'Rate Limiting Algorithms & Burst Handling',
+        description: 'Managing traffic bursts using token bucket, leaky bucket, or sliding window counters.',
+        keywords: ['token bucket', 'leaky bucket', 'sliding window', 'fixed window', 'burst', 'refill', 'capacity'],
+      },
+      {
+        name: 'Throttling & HTTP 429 Status',
+        description: 'Rejecting excessive requests with HTTP 429 and communicating limits with Retry-After and rate limit headers.',
+        keywords: ['429', 'too many requests', 'retry-after', 'headers', 'throttle', 'exhaustion', 'rate limit'],
+      },
+      {
+        name: 'Distributed Enforcement & Gateways',
+        description: 'Enforcing rate limits via distributed counters (Redis) or edge reverse proxies (Cloudflare, Nginx).',
+        keywords: ['redis', 'gateway', 'reverse proxy', 'counter', 'atomic increment', 'cloudflare', 'middleware'],
+      },
+    ],
+  },
+
+  [ConceptId.ERROR_BOUNDARY]: {
+    conceptId: ConceptId.ERROR_BOUNDARY,
+    name: 'UI Error Boundaries & Fault Isolation',
+    minDistinctMechanisms: 2,
+    mechanisms: [
+      {
+        name: 'Lifecycle Catching & Fallback UI',
+        description: 'Implementing getDerivedStateFromError and componentDidCatch to catch render errors and show fallback UI.',
+        keywords: ['componentdidcatch', 'getderivedstatefromerror', 'fallback ui', 'fallback', 'white screen', 'catch error'],
+      },
+      {
+        name: 'Lifecycle Scope & Async Limitations',
+        description: 'Recognizing that error boundaries catch rendering errors but do not catch async or event handler errors.',
+        keywords: ['asynchronous', 'event handler', 'settimeout', 'rendering', 'reconciliation', 'async', 'lifecycle'],
+      },
+      {
+        name: 'Granularity & Fault Isolation',
+        description: 'Placing localized error boundaries around components to isolate failures and maintain overall app stability.',
+        keywords: ['localized', 'fault isolation', 'widget', 'sub-tree', 'sub tree', 'blast radius', 'graceful degradation'],
       },
     ],
   },
