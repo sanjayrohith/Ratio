@@ -6,6 +6,8 @@ import {
   isEvasionAnswer,
   MechanismGroup,
 } from './rubrics.js';
+import { defaultTextNormalizer } from './normalizer.js';
+
 
 export interface MatcherOptions {
   minimumPassingScore?: number;
@@ -245,8 +247,12 @@ export class ConceptMatcher {
 
     // Single word: use word boundary regex
     const wordRegex = new RegExp(`\\b${this.escapeRegex(sanitizedKw)}\\b`, 'i');
-    return wordRegex.test(sanitizedText);
+    if (wordRegex.test(sanitizedText)) return true;
+
+    // Fuzzy token match using normalizer (handles plurals and stemming)
+    return defaultTextNormalizer.fuzzyTokenMatch(keyword, rawText);
   }
+
 
   private escapeRegex(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
