@@ -123,6 +123,15 @@ export class CheckpointQueryService {
       }
     }
 
+    let detectedKeywords: string[] | null = null;
+    if (row.detected_keywords) {
+      try {
+        detectedKeywords = JSON.parse(row.detected_keywords);
+      } catch {
+        detectedKeywords = null;
+      }
+    }
+
     return {
       ticket_id: row.ticket_id,
       interception_id: row.interception_id,
@@ -133,10 +142,20 @@ export class CheckpointQueryService {
       expected_keywords: expectedKeywords,
       student_answer: row.student_answer,
       status: row.status,
-      evaluation_score: row.evaluation_score,
+      evaluation_score:
+        row.evaluation_score !== undefined && row.evaluation_score !== null
+          ? Number(row.evaluation_score)
+          : null,
       evaluation_reason: row.evaluation_reason,
+      concept_score:
+        row.concept_score !== undefined && row.concept_score !== null
+          ? Number(row.concept_score)
+          : null,
+      detected_keywords: detectedKeywords,
+      is_evasive: Boolean(row.is_evasive),
       created_at: row.created_at,
       resolved_at: row.resolved_at,
     };
   }
 }
+

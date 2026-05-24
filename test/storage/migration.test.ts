@@ -60,16 +60,19 @@ describe('SQLite Database & Migration Lifecycle Tests', () => {
     const db = createDatabase(':memory:');
     try {
       const appliedFirstTime = runMigrations(db);
-      expect(appliedFirstTime).toBe(3);
+      expect(appliedFirstTime).toBe(4);
 
       const migrations = getAppliedMigrations(db);
-      expect(migrations.length).toBe(3);
+      expect(migrations.length).toBe(4);
       expect(migrations[0].version).toBe(1);
       expect(migrations[0].name).toBe('001_initial_schema.sql');
       expect(migrations[1].version).toBe(2);
       expect(migrations[1].name).toBe('002_fts5_checkpoints.sql');
       expect(migrations[2].version).toBe(3);
       expect(migrations[2].name).toBe('003_pending_writes.sql');
+      expect(migrations[3].version).toBe(4);
+      expect(migrations[3].name).toBe('004_checkpoint_metrics.sql');
+
 
       // Verify tables exist
       const tables = db

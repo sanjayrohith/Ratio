@@ -131,6 +131,12 @@ CREATE INDEX IF NOT EXISTS idx_pending_writes_status ON pending_writes(status);
 CREATE INDEX IF NOT EXISTS idx_pending_writes_created_at ON pending_writes(created_at);
 `;
 
+export const CHECKPOINT_METRICS_MIGRATION_SQL = `
+ALTER TABLE checkpoints ADD COLUMN concept_score REAL;
+ALTER TABLE checkpoints ADD COLUMN detected_keywords TEXT;
+ALTER TABLE checkpoints ADD COLUMN is_evasive INTEGER NOT NULL DEFAULT 0;
+`;
+
 /**
  * Embedded migrations list fallback if running in bundled environment.
  */
@@ -150,7 +156,13 @@ const EMBEDDED_MIGRATIONS: Array<{ version: number; name: string; sql: string }>
     name: '003_pending_writes.sql',
     sql: PENDING_WRITES_MIGRATION_SQL,
   },
+  {
+    version: 4,
+    name: '004_checkpoint_metrics.sql',
+    sql: CHECKPOINT_METRICS_MIGRATION_SQL,
+  },
 ];
+
 
 /**
  * Applies pending schema migrations to the given SQLite database.

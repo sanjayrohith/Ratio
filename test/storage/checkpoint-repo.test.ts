@@ -203,4 +203,78 @@ describe('Checkpoint Repository & FTS5 Search Integration Tests', () => {
     const passedResults = queryService.query({ status: 'passed' });
     expect(passedResults.total).toBe(5);
   });
+
+  it('records numeric concept coverage scores (0-100), detected keywords, and evasion indicators upon resolution', () => {
+    checkpointRepo.insertCheckpoint({
+      ticketId: 'eval-chk-1',
+      filePath: 'src/api/handler.ts',
+      question: 'Explain API idempotency keys and cache deduplication.',
+      concept: 'API_IDEMPOTENCY',
+      expectedKeywords: ['idempotency', 'cache', 'atomic'],
+    });
+
+    const initial = checkpointRepo.getByTicketId('eval-chk-1');
+    expect(initial?.concept_score).toBeNull();
+    expect(initial?.detected_keywords).toBeNull();
+    expect(initial?.is_evasive).toBe(false);
+
+    // Resolve checkpoint with score 85, detected keywords, and is_evasive false
+    const resolved = checkpointRepo.resolveCheckpoint({
+      ticketId: 'eval-chk-1',
+      status: 'passed',
+      evaluationScore: 85,
+      conceptScore: 85,
+      detectedKeywords: ['idempotency key', 'deduplication', 'redis lock'],
+      isEvasive: false,
+      evaluationReason: 'Identified core mechanisms: idempotency-key header and deduplication window.',
+    });
+
+    expect(resolved.status).toBe('passed');
+    expect(resolved.concept_score).toBe(85);
+    expect(resolved.detected_keywords).toEqual(['idempotency key', 'deduplication', 'redis lock']);
+    expect(resolved.is_evasive).toBe(false);
+    expect(resolved.evaluation_score).toBe(85);
+
+    // Verify retrieval matches persisted values
+    const retrieved = checkpointRepo.getByTicketId('eval-chk-1');
+    expect(retrieved?.concept_score).toBe(85);
+    expect(retrieved?.detected_keywords).toEqual(['idempotency key', 'deduplication', 'redis lock']);
+    expect(retrieved?.is_evasive).toBe(false);
+  });
+
+  it('records evasive answer indicators and quality metrics via recordAnswer and recordMetrics', () => {
+    checkpointRepo.insertCheckpoint({
+      ticketId: 'evasive-chk-1',
+      filePath: 'src/state/store.ts',
+      question: 'Explain state immutability in React renders.',
+      concept: 'STATE_IMMUTABILITY',
+    });
+
+    // Record an evasive answer
+    const answered = checkpointRepo.recordAnswer({
+      ticketId: 'evasive-chk-1',
+      studentAnswer: 'idk skip this',
+      conceptScore: 0,
+      detectedKeywords: [],
+      isEvasive: true,
+    });
+
+    expect(answered.student_answer).toBe('idk skip this');
+    expect(answered.concept_score).toBe(0);
+    expect(answered.detected_keywords).toEqual([]);
+    expect(answered.is_evasive).toBe(true);
+
+    // Update metrics directly via recordMetrics
+    const updatedMetrics = checkpointRepo.recordMetrics({
+      ticketId: 'evasive-chk-1',
+      conceptScore: 15,
+      detectedKeywords: ['state'],
+      isEvasive: false,
+    });
+
+    expect(updatedMetrics.concept_score).toBe(15);
+    expect(updatedMetrics.detected_keywords).toEqual(['state']);
+    expect(updatedMetrics.is_evasive).toBe(false);
+  });
 });
+

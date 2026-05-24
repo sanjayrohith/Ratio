@@ -13,6 +13,9 @@ export interface ResolveAnswerOptions {
   status: 'passed' | 'failed' | 'bypassed';
   evaluationScore?: number | null;
   evaluationReason?: string | null;
+  conceptScore?: number | null;
+  detectedKeywords?: string[] | null;
+  isEvasive?: boolean;
   customTrustDelta?: number;
 }
 
@@ -55,7 +58,11 @@ export class TrustScoreCoordinator {
       status: options.status,
       evaluationScore: options.evaluationScore,
       evaluationReason: options.evaluationReason,
+      conceptScore: options.conceptScore ?? (options.evaluationScore !== undefined ? options.evaluationScore : undefined),
+      detectedKeywords: options.detectedKeywords,
+      isEvasive: options.isEvasive,
     });
+
 
     // Fetch current file trust score
     const currentTrustRecord = this.trustRepo.getOrCreate(checkpoint.file_path);
@@ -115,7 +122,13 @@ export class TrustScoreCoordinator {
    */
   public applyEvaluationOutcome(
     ticketId: string,
-    evaluation: { passed: boolean; score: number; feedback?: string },
+    evaluation: {
+      passed: boolean;
+      score: number;
+      feedback?: string;
+      matchedKeywords?: string[];
+      isEvasive?: boolean;
+    },
     customDelta?: number
   ): TrustResolutionResult {
     return this.resolveCheckpointAnswer({
@@ -123,6 +136,9 @@ export class TrustScoreCoordinator {
       status: evaluation.passed ? 'passed' : 'failed',
       evaluationScore: evaluation.score,
       evaluationReason: evaluation.feedback ?? null,
+      conceptScore: evaluation.score,
+      detectedKeywords: evaluation.matchedKeywords,
+      isEvasive: evaluation.isEvasive,
       customTrustDelta: customDelta,
     });
   }

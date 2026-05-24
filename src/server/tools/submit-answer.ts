@@ -149,7 +149,13 @@ export async function handleSubmitAnswer(
     // Record student answer first if checkpointRepo is present
     if (deps.checkpointRepo) {
       try {
-        deps.checkpointRepo.recordAnswer({ ticketId, studentAnswer: answer });
+        deps.checkpointRepo.recordAnswer({
+          ticketId,
+          studentAnswer: answer,
+          conceptScore: evaluation.score,
+          detectedKeywords: evaluation.matchedKeywords,
+          isEvasive: evaluation.isEvasive,
+        });
       } catch {
         // Ignored if checkpoint not present in SQLite checkpoints table
       }
@@ -184,7 +190,13 @@ export async function handleSubmitAnswer(
   // Answer was shallow, evasive, or failed mechanisms
   if (deps.checkpointRepo) {
     try {
-      deps.checkpointRepo.recordAnswer({ ticketId, studentAnswer: answer });
+      deps.checkpointRepo.recordAnswer({
+        ticketId,
+        studentAnswer: answer,
+        conceptScore: evaluation.score,
+        detectedKeywords: evaluation.matchedKeywords,
+        isEvasive: evaluation.isEvasive,
+      });
     } catch {
       // Ignored
     }
@@ -193,6 +205,7 @@ export async function handleSubmitAnswer(
   if (deps.trustCoordinator) {
     try {
       deps.trustCoordinator.applyEvaluationOutcome(ticketId, evaluation);
+
     } catch {
       if (deps.trustRepo) {
         const current = deps.trustRepo.getOrCreate(filePath);

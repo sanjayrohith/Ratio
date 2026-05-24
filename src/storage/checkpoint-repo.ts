@@ -14,6 +14,9 @@ export interface CheckpointRecord {
   status: CheckpointStatus;
   evaluation_score?: number | null;
   evaluation_reason?: string | null;
+  concept_score?: number | null;
+  detected_keywords?: string[] | null;
+  is_evasive?: boolean;
   created_at: string;
   resolved_at?: string | null;
 }
@@ -27,12 +30,18 @@ export interface InsertCheckpointInput {
   concept: string;
   expectedKeywords?: string[] | null;
   status?: CheckpointStatus;
+  conceptScore?: number | null;
+  detectedKeywords?: string[] | null;
+  isEvasive?: boolean;
   createdAt?: string;
 }
 
 export interface UpdateAnswerInput {
   ticketId: string;
   studentAnswer: string;
+  conceptScore?: number | null;
+  detectedKeywords?: string[] | null;
+  isEvasive?: boolean;
 }
 
 export interface ResolveCheckpointInput {
@@ -40,6 +49,9 @@ export interface ResolveCheckpointInput {
   status: 'passed' | 'failed' | 'bypassed';
   evaluationScore?: number | null;
   evaluationReason?: string | null;
+  conceptScore?: number | null;
+  detectedKeywords?: string[] | null;
+  isEvasive?: boolean;
   resolvedAt?: string;
 }
 
@@ -55,6 +67,11 @@ export class CheckpointRepository {
     const expectedKeywordsJson = input.expectedKeywords
       ? JSON.stringify(input.expectedKeywords)
       : null;
+    const detectedKeywordsJson = input.detectedKeywords
+      ? JSON.stringify(input.detectedKeywords)
+      : null;
+    const isEvasive = input.isEvasive ? 1 : 0;
+    const conceptScore = input.conceptScore !== undefined ? input.conceptScore : null;
 
     const stmt = this.db.prepare(`
       INSERT INTO checkpoints (
@@ -66,8 +83,11 @@ export class CheckpointRepository {
         concept,
         expected_keywords,
         status,
+        concept_score,
+        detected_keywords,
+        is_evasive,
         created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     stmt.run(
@@ -79,6 +99,9 @@ export class CheckpointRepository {
       input.concept,
       expectedKeywordsJson,
       status,
+      conceptScore,
+      detectedKeywordsJson,
+      isEvasive,
       createdAt
     );
 
@@ -103,13 +126,65 @@ export class CheckpointRepository {
    * Records a student's answer for a pending checkpoint ticket.
    */
   recordAnswer(input: UpdateAnswerInput): CheckpointRecord {
+    const detectedKeywordsJson =
+      input.detectedKeywords !== undefined ? JSON.stringify(input.detectedKeywords) : null;
+    const isEvasive = input.isEvasive !== undefined ? (input.isEvasive ? 1 : 0) : null;
+
     const stmt = this.db.prepare(`
       UPDATE checkpoints
-      SET student_answer = ?
+      SET student_answer = ?,
+          concept_score = COALESCE(?, concept_score),
+          detected_keywords = COALESCE(?, detected_keywords),
+          is_evasive = COALESCE(?, is_evasive)
       WHERE ticket_id = ?
     `);
 
-    const result = stmt.run(input.studentAnswer, input.ticketId);
+    const result = stmt.run(
+      input.studentAnswer,
+      input.conceptScore !== undefined ? input.conceptScore : null,
+      detectedKeywordsJson,
+      isEvasive,
+      input.ticketId
+    );
+    if (result.changes === 0) {
+      throw new Error(`Checkpoint not found for ticket ID: ${input.ticketId}`);
+    }
+
+    const updated = this.getByTicketId(input.ticketId);
+    if (!updated) {
+      throw new Error(`Failed to retrieve updated checkpoint: ${input.ticketId}`);
+    }
+    return updated;
+  }
+
+  /**
+   * Directly updates explanation quality scoring metrics on a checkpoint.
+   */
+  recordMetrics(input: {
+    ticketId: string;
+    conceptScore?: number | null;
+    detectedKeywords?: string[] | null;
+    isEvasive?: boolean;
+  }): CheckpointRecord {
+    const detectedKeywordsJson =
+      input.detectedKeywords !== undefined ? JSON.stringify(input.detectedKeywords) : null;
+    const isEvasive = input.isEvasive !== undefined ? (input.isEvasive ? 1 : 0) : null;
+
+    const stmt = this.db.prepare(`
+      UPDATE checkpoints
+      SET concept_score = COALESCE(?, concept_score),
+          detected_keywords = COALESCE(?, detected_keywords),
+          is_evasive = COALESCE(?, is_evasive)
+      WHERE ticket_id = ?
+    `);
+
+    const result = stmt.run(
+      input.conceptScore !== undefined ? input.conceptScore : null,
+      detectedKeywordsJson,
+      isEvasive,
+      input.ticketId
+    );
+
     if (result.changes === 0) {
       throw new Error(`Checkpoint not found for ticket ID: ${input.ticketId}`);
     }
@@ -126,12 +201,24 @@ export class CheckpointRepository {
    */
   resolveCheckpoint(input: ResolveCheckpointInput): CheckpointRecord {
     const resolvedAt = input.resolvedAt ?? new Date().toISOString();
+    const conceptScore =
+      input.conceptScore !== undefined
+        ? input.conceptScore
+        : input.evaluationScore !== undefined
+        ? input.evaluationScore
+        : null;
+    const detectedKeywordsJson =
+      input.detectedKeywords !== undefined ? JSON.stringify(input.detectedKeywords) : null;
+    const isEvasive = input.isEvasive !== undefined ? (input.isEvasive ? 1 : 0) : null;
 
     const stmt = this.db.prepare(`
       UPDATE checkpoints
       SET status = ?,
           evaluation_score = ?,
           evaluation_reason = ?,
+          concept_score = COALESCE(?, concept_score),
+          detected_keywords = COALESCE(?, detected_keywords),
+          is_evasive = COALESCE(?, is_evasive),
           resolved_at = ?
       WHERE ticket_id = ?
     `);
@@ -140,6 +227,9 @@ export class CheckpointRepository {
       input.status,
       input.evaluationScore !== undefined ? input.evaluationScore : null,
       input.evaluationReason ?? null,
+      conceptScore,
+      detectedKeywordsJson,
+      isEvasive,
       resolvedAt,
       input.ticketId
     );
@@ -154,6 +244,7 @@ export class CheckpointRepository {
     }
     return updated;
   }
+
 
   /**
    * Lists checkpoints with optional filters.
@@ -215,6 +306,15 @@ export class CheckpointRepository {
       }
     }
 
+    let detectedKeywords: string[] | null = null;
+    if (row.detected_keywords) {
+      try {
+        detectedKeywords = JSON.parse(row.detected_keywords);
+      } catch {
+        detectedKeywords = null;
+      }
+    }
+
     return {
       ticket_id: row.ticket_id,
       interception_id: row.interception_id,
@@ -225,10 +325,20 @@ export class CheckpointRepository {
       expected_keywords: expectedKeywords,
       student_answer: row.student_answer,
       status: row.status,
-      evaluation_score: row.evaluation_score,
+      evaluation_score:
+        row.evaluation_score !== undefined && row.evaluation_score !== null
+          ? Number(row.evaluation_score)
+          : null,
       evaluation_reason: row.evaluation_reason,
+      concept_score:
+        row.concept_score !== undefined && row.concept_score !== null
+          ? Number(row.concept_score)
+          : null,
+      detected_keywords: detectedKeywords,
+      is_evasive: Boolean(row.is_evasive),
       created_at: row.created_at,
       resolved_at: row.resolved_at,
     };
   }
 }
+
