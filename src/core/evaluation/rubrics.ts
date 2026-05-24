@@ -533,6 +533,62 @@ export const TECHNICAL_SYNONYMS: Record<string, string[]> = {
     'error wrapper',
     'catch block',
   ],
+
+  // React State Management & Immutability
+  're-render': [
+    'rerender',
+    're-renders',
+    'rerenders',
+    'rendering',
+    'render loop',
+    'render cascade',
+  ],
+  dependency: [
+    'dependencies',
+    'dependency array',
+    'deps',
+    'deps array',
+    'exhaustive-deps',
+  ],
+  'functional update': [
+    'functional setter',
+    'prev state',
+    'previous state',
+    'updater function',
+    'callback update',
+    'setstate callback',
+  ],
+  mutation: [
+    'mutating',
+    'mutate',
+    'in-place',
+    'direct modification',
+    'in place',
+    'array push',
+  ],
+  'structural sharing': [
+    'reference preservation',
+    'persistent data structure',
+    'unchanged branches',
+    'immutable tree',
+  ],
+  'shallow copy': [
+    'object spread',
+    'array spread',
+    'spread syntax',
+    'spread operator',
+    'slice',
+    'clone',
+    'new object',
+  ],
+  'reference equality': [
+    'object.is',
+    'referential equality',
+    'pointer equality',
+    'shallow comparison',
+    'same reference',
+    'reference comparison',
+  ],
 };
 
 /**
@@ -900,6 +956,52 @@ export const CONCEPT_RUBRICS: Record<ConceptId, ConceptRubric> = {
         name: 'Centralized Logging & Telemetry',
         description: 'Using centralized error middleware to safely capture diagnostics on the server.',
         keywords: ['middleware', 'centralized', 'global handler', 'telemetry', 'logger', 'logging'],
+      },
+    ],
+  },
+
+  [ConceptId.STATE_RENDER_LOOP]: {
+    conceptId: ConceptId.STATE_RENDER_LOOP,
+    name: 'React State & Re-render Loops',
+    minDistinctMechanisms: 2,
+    mechanisms: [
+      {
+        name: 'Dependency Array & Effect Lifecycles',
+        description: 'Specifying exhaustive dependencies to prevent unintended effect executions and infinite loops.',
+        keywords: ['dependency', 'dependencies', 'dependency array', 'useeffect', 'effect', 'stale closure', 'exhaustive-deps'],
+      },
+      {
+        name: 'Functional State Updaters & Batching',
+        description: 'Passing updater callbacks (prev => ...) to state setters to guarantee updates against fresh state.',
+        keywords: ['functional update', 'functional setter', 'prev state', 'previous state', 'updater', 'setstate', 'batching'],
+      },
+      {
+        name: 'Render Loop Lifecycle & Recursion',
+        description: 'Preventing state setters from triggering recursive cascading re-render cascades.',
+        keywords: ['infinite loop', 're-render', 'render loop', 'infinite render', 'rerender', 'lifecycle', 'trigger render'],
+      },
+    ],
+  },
+
+  [ConceptId.STATE_IMMUTABILITY]: {
+    conceptId: ConceptId.STATE_IMMUTABILITY,
+    name: 'State Immutability & Structural Sharing',
+    minDistinctMechanisms: 2,
+    mechanisms: [
+      {
+        name: 'Reference Equality & Change Detection',
+        description: 'React and state managers rely on reference comparisons (Object.is) to detect changes.',
+        keywords: ['reference equality', 'reference check', 'object.is', 'shallow compare', 'pointer', 'identity', 'change detection'],
+      },
+      {
+        name: 'Shallow Copying & Structural Sharing',
+        description: 'Creating new top-level container references while retaining references to unchanged nested trees.',
+        keywords: ['shallow copy', 'spread operator', 'spread syntax', 'structural sharing', 'new object', 'clone', 'slice', 'map', 'filter'],
+      },
+      {
+        name: 'Direct Mutation Hazards',
+        description: 'Direct array or object property mutation circumvents state tracking and introduces silent UI bugs.',
+        keywords: ['direct mutation', 'mutate', 'push', 'splice', 'in-place', 'stale ui', 'side-effect'],
       },
     ],
   },

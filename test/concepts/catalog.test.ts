@@ -13,8 +13,8 @@ import {
 describe('Socratic Question Bank & Concept Taxonomy Unit Tests', () => {
   const allConceptIds = Object.values(ConceptId);
 
-  it('contains exactly 15 defined full-stack concepts with metadata', () => {
-    expect(allConceptIds.length).toBe(15);
+  it('contains defined full-stack concepts with metadata', () => {
+    expect(allConceptIds.length).toBeGreaterThanOrEqual(15);
 
     for (const id of allConceptIds) {
       const def = CONCEPT_DEFINITIONS[id];

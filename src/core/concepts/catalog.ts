@@ -226,6 +226,14 @@ export const QUESTION_CATALOG: Record<ConceptId, SocraticQuestion[]> = {
       hint: 'When a popular key expires, hundreds of simultaneous queries hit the database at the exact same moment.',
       expectedKeywords: ['stampede', 'thundering', 'lock', 'mutex', 'expire', 'spike'],
     },
+    {
+      id: 'cache_ttl_vs_event_tradeoff',
+      conceptId: ConceptId.CACHE_INVALIDATION_STRATEGY,
+      question: 'What are the architectural trade-offs between TTL-based expiration and event-driven cache invalidation using message queues or CDC?',
+      focus: 'tradeoff',
+      hint: 'TTL accepts temporary staleness in exchange for operational simplicity; event-driven invalidation guarantees real-time freshness with higher system complexity.',
+      expectedKeywords: ['ttl', 'event-driven', 'staleness', 'invalidation', 'pub/sub', 'consistency'],
+    },
   ],
 
   [ConceptId.BACKGROUND_JOB_RETRY_IDEMPOTENCY]: [
@@ -322,4 +330,61 @@ export const QUESTION_CATALOG: Record<ConceptId, SocraticQuestion[]> = {
       expectedKeywords: ['middleware', 'centralized', 'status code', 'telemetry', 'log', 'catch'],
     },
   ],
+
+  [ConceptId.STATE_RENDER_LOOP]: [
+    {
+      id: 'state_render_loop_deps',
+      conceptId: ConceptId.STATE_RENDER_LOOP,
+      question: 'Why does calling a state setter inside useEffect without a dependency array cause an infinite re-render loop in React?',
+      focus: 'mechanism',
+      hint: 'Reflect on how setting state triggers a component re-render, which in turn re-executes the effect body.',
+      expectedKeywords: ['infinite', 're-render', 'dependency', 'effect', 'loop', 'setter', 'trigger'],
+    },
+    {
+      id: 'state_render_loop_stale_closure',
+      conceptId: ConceptId.STATE_RENDER_LOOP,
+      question: 'How does the functional updater pattern (setState(prev => ...)) prevent stale closure bugs in asynchronous timers and event callbacks?',
+      focus: 'rationale',
+      hint: 'Asynchronous callbacks capture state values from their instantiation render, missing intermediate updates.',
+      expectedKeywords: ['closure', 'stale', 'functional', 'updater', 'previous', 'batching'],
+    },
+    {
+      id: 'state_render_loop_memo_tradeoff',
+      conceptId: ConceptId.STATE_RENDER_LOOP,
+      question: 'What are the architectural trade-offs of wrapping callbacks and values in useCallback and useMemo versus accepting re-renders?',
+      focus: 'tradeoff',
+      hint: 'Memoization carries computational overhead for dependency comparisons and increases code complexity.',
+      expectedKeywords: ['memoization', 'usecallback', 'usememo', 'overhead', 'dependency', 'cost'],
+    },
+  ],
+
+  [ConceptId.STATE_IMMUTABILITY]: [
+    {
+      id: 'state_immutability_reference_check',
+      conceptId: ConceptId.STATE_IMMUTABILITY,
+      question: 'Why does directly mutating an object or array in React or Redux state fail to trigger component re-renders?',
+      focus: 'mechanism',
+      hint: 'React and shallow comparison hooks evaluate reference equality (Object.is) between state snapshots.',
+      expectedKeywords: ['mutation', 'reference', 'equality', 're-render', 'shallow', 'object.is'],
+    },
+    {
+      id: 'state_immutability_structural_sharing',
+      conceptId: ConceptId.STATE_IMMUTABILITY,
+      question: 'How does structural sharing in immutable state trees optimize memory allocation and prevent unnecessary sub-tree renders?',
+      focus: 'rationale',
+      hint: 'Unchanged state sub-trees retain their existing object references, allowing memoized components to skip rendering.',
+      expectedKeywords: ['structural sharing', 'reference', 'shallow copy', 'spread', 'memory', 'skip'],
+    },
+    {
+      id: 'state_immutability_spread_vs_immer',
+      conceptId: ConceptId.STATE_IMMUTABILITY,
+      question: 'What are the trade-offs between manual object spread syntax and helper libraries like Immer when updating deeply nested state?',
+      focus: 'tradeoff',
+      hint: 'Spread syntax preserves zero dependencies but is error-prone on nested structures; Immer adds runtime proxy overhead.',
+      expectedKeywords: ['spread', 'nested', 'immer', 'proxy', 'boilerplate', 'performance'],
+    },
+  ],
 };
+
+export { CONCEPT_RUBRICS, type ConceptRubric, type MechanismGroup } from '../evaluation/rubrics.js';
+

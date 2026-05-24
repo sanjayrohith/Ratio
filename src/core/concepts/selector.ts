@@ -130,6 +130,20 @@ export class QuestionSelector {
       );
     }
 
+    if (this.hasKeywords(diffLower, ['useeffect', 'setstate', 'prev =>', 'rerender', 'render loop', 'usecallback', 'usememo'])) {
+      return this.pickQuestion(
+        ConceptId.STATE_RENDER_LOOP,
+        'Detected React effect lifecycle, state setter, or re-render management.'
+      );
+    }
+
+    if (this.hasKeywords(diffLower, ['immer', 'produce(', '...state', 'shallow copy', 'structural sharing', 'direct mutation'])) {
+      return this.pickQuestion(
+        ConceptId.STATE_IMMUTABILITY,
+        'Detected state mutation prevention or immutable structural sharing.'
+      );
+    }
+
     // 2. Check file path heuristics
     if (filePathLower.includes('migration') || filePathLower.endsWith('.sql')) {
       return this.pickQuestion(

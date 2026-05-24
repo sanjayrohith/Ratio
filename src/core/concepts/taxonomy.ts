@@ -19,6 +19,8 @@ export enum ConceptId {
   ENV_SECRET_ISOLATION = 'env_secret_isolation',
   INDEXING_QUERY_PERFORMANCE = 'indexing_query_performance',
   ERROR_HANDLING_LEAKAGE = 'error_handling_leakage',
+  STATE_RENDER_LOOP = 'state_render_loop',
+  STATE_IMMUTABILITY = 'state_immutability',
 }
 
 export interface ConceptDefinition {
@@ -150,5 +152,21 @@ export const CONCEPT_DEFINITIONS: Record<ConceptId, ConceptDefinition> = {
     description: 'Preventing internal stack traces, DB query details, or system paths from leaking in API responses.',
     architecturalRisks: ['Information disclosure for attackers', 'Uncaught exceptions crashing processes', 'Silent failures without logging'],
     recommendedPatterns: ['Global error handler middleware', 'Sanitized public error messages', 'Structured telemetry logging with error tracing'],
+  },
+  [ConceptId.STATE_RENDER_LOOP]: {
+    id: ConceptId.STATE_RENDER_LOOP,
+    name: 'React State & Re-render Loops',
+    category: 'ui',
+    description: 'Managing component state updates, effect dependency arrays, and preventing recursive re-render loops.',
+    architecturalRisks: ['Infinite component re-render loops', 'UI thread locking', 'Stale closure bugs', 'Excessive DOM reconciliations'],
+    recommendedPatterns: ['Exhaustive useEffect dependencies', 'Functional state updates prev => ...', 'Memoized callbacks and selectors'],
+  },
+  [ConceptId.STATE_IMMUTABILITY]: {
+    id: ConceptId.STATE_IMMUTABILITY,
+    name: 'State Immutability & Structural Sharing',
+    category: 'ui',
+    description: 'Preserving immutable state trees with shallow copies and structural sharing for predictable UI change detection.',
+    architecturalRisks: ['Direct state mutations in-place', 'Dropped UI updates from reference equality checks', 'Unintended state corruption across components'],
+    recommendedPatterns: ['Object and array spread syntax', 'Immutability helpers (Immer, shallow copy)', 'Pure reducer functions'],
   },
 };
