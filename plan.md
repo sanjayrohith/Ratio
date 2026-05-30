@@ -431,43 +431,43 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 13 (7 tasks) — CLI Framework & Project Bootstrap (`ratio init`)
 
-- [ ] **Task 63**: Scaffold the command-line interface entry point in `src/cli/index.ts` using `commander`, defining global flags (`--verbose`, `--help`, `--version`) and subcommands.
+- [x] **Task 63**: Scaffold the command-line interface entry point in `src/cli/index.ts` using `commander`, defining global flags (`--verbose`, `--help`, `--version`) and subcommands.
 
   ```bash
   git commit -m "feat: scaffold ratio cli entry point using commander and bun executable"
   ```
 
-- [ ] **Task 64**: Implement `ratio init` in `src/cli/commands/init.ts` creating `.ratio/` directory, generating default `ratio.config.json`, and running initial SQLite migrations.
+- [x] **Task 64**: Implement `ratio init` in `src/cli/commands/init.ts` creating `.ratio/` directory, generating default `ratio.config.json`, and running initial SQLite migrations.
 
   ```bash
   git commit -m "feat: implement ratio init command to bootstrap .ratio configuration"
   ```
 
-- [ ] **Task 65**: Implement automatic Claude Code configuration updater in `src/cli/configurators/claude.ts` modifying `.claude.json` or `.claude/mcp.json` to register Ratio MCP server.
+- [x] **Task 65**: Implement automatic Claude Code configuration updater in `src/cli/configurators/claude.ts` modifying `.claude.json` or `.claude/mcp.json` to register Ratio MCP server.
 
   ```bash
   git commit -m "feat: implement automatic mcp client configuration writer for claude code"
   ```
 
-- [ ] **Task 66**: Implement configuration generators in `src/cli/configurators/cursor.ts` and `opencode.ts` generating MCP connection JSON for Cursor and opencode.
+- [x] **Task 66**: Implement configuration generators in `src/cli/configurators/cursor.ts` and `opencode.ts` generating MCP connection JSON for Cursor and opencode.
 
   ```bash
   git commit -m "feat: implement cursor and opencode mcp configuration generator"
   ```
 
-- [ ] **Task 67**: Implement template injector in `src/cli/configurators/guidelines.ts` writing Socratic routing guidelines into project `CLAUDE.md` to force agents to invoke Ratio tools.
+- [x] **Task 67**: Implement template injector in `src/cli/configurators/guidelines.ts` writing Socratic routing guidelines into project `CLAUDE.md` to force agents to invoke Ratio tools.
 
   ```bash
   git commit -m "feat: implement claude.md and agent guidelines template injection"
   ```
 
-- [ ] **Task 68**: Implement `ratio doctor` in `src/cli/commands/doctor.ts` checking Bun runtime presence, SQLite ledger health, file write permissions, and agent configuration status.
+- [x] **Task 68**: Implement `ratio doctor` in `src/cli/commands/doctor.ts` checking Bun runtime presence, SQLite ledger health, file write permissions, and agent configuration status.
 
   ```bash
   git commit -m "feat: implement ratio doctor diagnostic command for environment validation"
   ```
 
-- [ ] **Task 69**: Write CLI tests in `test/cli/init.test.ts` validating `ratio init` in temporary test directories, checking created files and config schemas.
+- [x] **Task 69**: Write CLI tests in `test/cli/init.test.ts` validating `ratio init` in temporary test directories, checking created files and config schemas.
 
   ```bash
   git commit -m "test: add end-to-end cli tests for ratio init and configuration generation"

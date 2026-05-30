@@ -38,6 +38,9 @@ export function createProgram(): Command {
       console.log(`Initialized Ratio in ${result.rootDir}`);
       console.log(`  Config: ${result.configPath}`);
       console.log(`  Ledger: ${result.dbPath}`);
+      if (result.configuredClients && result.configuredClients.length > 0) {
+        console.log(`  Configured Clients: ${result.configuredClients.join(', ')}`);
+      }
     });
 
   program
