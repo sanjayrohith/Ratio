@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { Command } from 'commander';
 import { executeInit } from './commands/init.js';
-
+import { executeDoctor } from './commands/doctor.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -40,13 +40,27 @@ export function createProgram(): Command {
       console.log(`  Ledger: ${result.dbPath}`);
     });
 
-
   program
     .command('doctor')
     .description('Diagnose environment health, Bun runtime, database, and agent integrations')
     .action(async () => {
-      if (program.opts().verbose) {
-        console.log('[ratio:debug] Executing doctor diagnostics');
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      const report = await executeDoctor({ verbose });
+
+      console.log('\nRatio Environment Diagnostics:');
+      for (const check of report.checks) {
+        const symbol = check.status === 'ok' ? '✓' : check.status === 'warn' ? '⚠' : '✗';
+        console.log(`  ${symbol} ${check.name}: ${check.message}`);
+        if (verbose && check.details) {
+          console.log(`    Details: ${JSON.stringify(check.details)}`);
+        }
+      }
+      console.log(
+        `\nSummary: ${report.summary.passed} passed, ${report.summary.warnings} warnings, ${report.summary.failures} failures\n`
+      );
+      if (!report.healthy) {
+        process.exitCode = 1;
       }
     });
 
