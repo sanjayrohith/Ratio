@@ -1,5 +1,7 @@
 #!/usr/bin/env bun
 import { Command } from 'commander';
+import { executeInit } from './commands/init.js';
+
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -21,12 +23,23 @@ export function createProgram(): Command {
     .command('init')
     .description('Bootstrap Ratio in current workspace (.ratio/, config, SQLite ledger)')
     .option('-y, --yes', 'accept default configuration without prompting')
+    .option('-f, --force', 'overwrite existing configuration')
     .option('-c, --client <client>', 'target coding agent client (claude, cursor, opencode, all)', 'all')
     .action(async (options) => {
-      if (program.opts().verbose) {
-        console.log('[ratio:debug] Executing init with options:', options);
-      }
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      const result = await executeInit({
+        yes: options.yes,
+        force: options.force,
+        client: options.client,
+        verbose,
+      });
+
+      console.log(`Initialized Ratio in ${result.rootDir}`);
+      console.log(`  Config: ${result.configPath}`);
+      console.log(`  Ledger: ${result.dbPath}`);
     });
+
 
   program
     .command('doctor')
