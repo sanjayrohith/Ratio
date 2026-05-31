@@ -487,7 +487,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement ratio log command to display recent checkpoints in terminal"
   ```
 
-- [ ] **Task 72**: Add per-file trust score breakdown table to `ratio status` rendering current trust ratings (0.0 - 1.0) and effective line thresholds per file.
+- [x] **Task 72**: Add per-file trust score breakdown table to `ratio status` rendering current trust ratings (0.0 - 1.0) and effective line thresholds per file.
 
   ```bash
   git commit -m "feat: add trust score inspection table to ratio status output"

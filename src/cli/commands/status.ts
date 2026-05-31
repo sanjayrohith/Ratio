@@ -3,6 +3,9 @@ import { resolve } from 'node:path';
 import { Database } from 'bun:sqlite';
 import { getWorkspaceContext } from '../../storage/workspace.js';
 import { createDatabase, closeDatabase } from '../../storage/db.js';
+import { TrustScoreRepository } from '../../storage/trust-repo.js';
+import { DynamicThresholdScaler } from '../../core/trust/scaler.js';
+import { loadRatioConfig } from '../../core/config/schema.js';
 
 export interface StatusOptions {
   cwd?: string;
@@ -21,15 +24,57 @@ export interface StatusMetrics {
   trackedFilesCount: number;
 }
 
+export interface FileTrustStatus {
+  filePath: string;
+  trustScore: number;
+  effectiveLinesAdded: number;
+  effectiveLinesRemoved: number;
+  totalPasses: number;
+  totalFailures: number;
+  updatedAt: string;
+}
+
 export interface StatusResult {
   initialized: boolean;
   rootDir: string;
   dbPath: string;
   metrics: StatusMetrics;
+  fileTrustBreakdown: FileTrustStatus[];
 }
 
 /**
- * Computes repository metrics from the SQLite ledger and outputs status summary.
+ * Renders an aligned terminal table for per-file trust scores and effective thresholds.
+ */
+export function renderTrustTable(files: FileTrustStatus[]): void {
+  console.log('Per-File Trust Scores & Effective Thresholds:');
+  if (files.length === 0) {
+    console.log('  No files tracked yet. Initial trust (1.00) applies to subsequent writes.\n');
+    return;
+  }
+
+  const colFile = Math.max(28, ...files.map((f) => f.filePath.length));
+  const pad = (str: string, width: number) => str.padEnd(width);
+
+  console.log(
+    `  ${pad('File Path', colFile)}  ${pad('Trust', 8)}  ${pad('Effective Limit', 18)}  ${pad('Pass / Fail', 12)}  ${pad('Last Updated', 19)}`
+  );
+  console.log(`  ${'-'.repeat(colFile + 65)}`);
+
+  for (const file of files) {
+    const scoreStr = file.trustScore.toFixed(2);
+    const limitStr = `+${file.effectiveLinesAdded} / -${file.effectiveLinesRemoved}`;
+    const pfStr = `${file.totalPasses} / ${file.totalFailures}`;
+    const dateStr = file.updatedAt ? file.updatedAt.replace('T', ' ').slice(0, 19) : '-';
+
+    console.log(
+      `  ${pad(file.filePath, colFile)}  ${pad(scoreStr, 8)}  ${pad(limitStr, 18)}  ${pad(pfStr, 12)}  ${pad(dateStr, 19)}`
+    );
+  }
+  console.log('');
+}
+
+/**
+ * Computes repository metrics from the SQLite ledger and outputs status summary and trust breakdown.
  */
 export async function executeStatus(options: StatusOptions = {}): Promise<StatusResult> {
   const context = getWorkspaceContext(options.cwd);
@@ -59,6 +104,7 @@ export async function executeStatus(options: StatusOptions = {}): Promise<Status
       rootDir,
       dbPath,
       metrics: defaultMetrics,
+      fileTrustBreakdown: [],
     };
   }
 
@@ -113,19 +159,39 @@ export async function executeStatus(options: StatusOptions = {}): Promise<Status
     const totalSessions = sessionRow?.total ?? 0;
     const activeSessions = sessionRow?.active ?? 0;
 
-    // 3. Query tracked files count
-    const filesRow = db
-      .prepare(`
-        SELECT COUNT(DISTINCT file_path) as count
-        FROM (
-          SELECT file_path FROM trust_scores
-          UNION
-          SELECT file_path FROM checkpoints
-        )
-      `)
-      .get() as { count: number };
+    // 3. Query tracked files and per-file trust scores
+    const trustRepo = new TrustScoreRepository(db);
+    const trustRecords = trustRepo.listAll();
 
-    const trackedFilesCount = filesRow?.count ?? 0;
+    const config = await loadRatioConfig(rootDir);
+    const scaler = new DynamicThresholdScaler();
+
+    const fileTrustBreakdown: FileTrustStatus[] = trustRecords.map((record) => {
+      const scaled = scaler.scaleThresholds(config.thresholds, record.score);
+      return {
+        filePath: record.file_path,
+        trustScore: record.score,
+        effectiveLinesAdded: scaled.maxLinesAdded,
+        effectiveLinesRemoved: scaled.maxLinesRemoved,
+        totalPasses: record.total_passes,
+        totalFailures: record.total_failures,
+        updatedAt: record.updated_at,
+      };
+    });
+
+    const trackedFilesCount = Math.max(trustRecords.length, (() => {
+      const filesRow = db!
+        .prepare(`
+          SELECT COUNT(DISTINCT file_path) as count
+          FROM (
+            SELECT file_path FROM trust_scores
+            UNION
+            SELECT file_path FROM checkpoints
+          )
+        `)
+        .get() as { count: number };
+      return filesRow?.count ?? 0;
+    })());
 
     const metrics: StatusMetrics = {
       totalCheckpoints,
@@ -152,6 +218,8 @@ export async function executeStatus(options: StatusOptions = {}): Promise<Status
     );
     console.log(`  Tracked Files:      ${metrics.trackedFilesCount}\n`);
 
+    renderTrustTable(fileTrustBreakdown);
+
     if (options.verbose) {
       console.log(`[ratio:status] Loaded metrics for database at ${dbPath}`);
     }
@@ -161,6 +229,7 @@ export async function executeStatus(options: StatusOptions = {}): Promise<Status
       rootDir,
       dbPath,
       metrics,
+      fileTrustBreakdown,
     };
   } finally {
     if (db) {
