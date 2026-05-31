@@ -475,7 +475,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 14 (4 tasks) — CLI Status & Inspection Commands (`ratio status`, `ratio log`)
 
-- [ ] **Task 70**: Implement `ratio status` in `src/cli/commands/status.ts` displaying total checkpoints, pass rate, active sessions, and tracked files from SQLite ledger.
+- [x] **Task 70**: Implement `ratio status` in `src/cli/commands/status.ts` displaying total checkpoints, pass rate, active sessions, and tracked files from SQLite ledger.
 
   ```bash
   git commit -m "feat: implement ratio status command showing active repo metrics"

@@ -2,6 +2,7 @@
 import { Command } from 'commander';
 import { executeInit } from './commands/init.js';
 import { executeDoctor } from './commands/doctor.js';
+import { executeStatus } from './commands/status.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -71,9 +72,9 @@ export function createProgram(): Command {
     .command('status')
     .description('Display repository trust metrics, pass rates, and active files')
     .action(async () => {
-      if (program.opts().verbose) {
-        console.log('[ratio:debug] Executing status inspection');
-      }
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      await executeStatus({ verbose });
     });
 
   program
