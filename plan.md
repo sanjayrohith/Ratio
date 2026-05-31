@@ -493,7 +493,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add trust score inspection table to ratio status output"
   ```
 
-- [ ] **Task 73**: Add test coverage in `test/cli/status.test.ts` and `test/cli/log.test.ts` verifying terminal output formatting, empty ledger states, and option handling.
+- [x] **Task 73**: Add test coverage in `test/cli/status.test.ts` and `test/cli/log.test.ts` verifying terminal output formatting, empty ledger states, and option handling.
 
   ```bash
   git commit -m "test: add cli tests for ratio status and log command outputs"
