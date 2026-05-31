@@ -481,7 +481,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement ratio status command showing active repo metrics"
   ```
 
-- [ ] **Task 71**: Implement `ratio log` in `src/cli/commands/log.ts` rendering recent checkpoint history with colorized pass/fail status, questions, and timestamps.
+- [x] **Task 71**: Implement `ratio log` in `src/cli/commands/log.ts` rendering recent checkpoint history with colorized pass/fail status, questions, and timestamps.
 
   ```bash
   git commit -m "feat: implement ratio log command to display recent checkpoints in terminal"

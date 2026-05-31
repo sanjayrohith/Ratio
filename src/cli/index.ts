@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { executeInit } from './commands/init.js';
 import { executeDoctor } from './commands/doctor.js';
 import { executeStatus } from './commands/status.js';
+import { executeLog } from './commands/log.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -81,10 +82,18 @@ export function createProgram(): Command {
     .command('log')
     .description('Display recent checkpoint ledger history and evaluation outcomes')
     .option('-n, --limit <number>', 'maximum number of checkpoints to display', '10')
+    .option('-s, --status <status>', 'filter by status (pending, passed, failed, bypassed)')
+    .option('-f, --file <path>', 'filter by target file path')
     .action(async (options) => {
-      if (program.opts().verbose) {
-        console.log('[ratio:debug] Executing log inspection with limit:', options.limit);
-      }
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      const limit = parseInt(options.limit, 10) || 10;
+      await executeLog({
+        limit,
+        status: options.status,
+        file: options.file,
+        verbose,
+      });
     });
 
   return program;
