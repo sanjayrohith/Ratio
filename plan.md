@@ -513,7 +513,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement metrics aggregator calculating comprehension ratios"
   ```
 
-- [ ] **Task 76**: Implement per-file breakdown generator in `src/core/reporting/file-summary.ts` detailing lines written, checkpoints triggered, questions answered, and final trust score.
+- [x] **Task 76**: Implement per-file breakdown generator in `src/core/reporting/file-summary.ts` detailing lines written, checkpoints triggered, questions answered, and final trust score.
 
   ```bash
   git commit -m "feat: implement per-file understanding ledger breakdown generator"
