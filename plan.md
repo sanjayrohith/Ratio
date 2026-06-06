@@ -501,7 +501,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 15 (6 tasks) — Shareable Portfolio Report Generator (`ratio report`)
 
-- [ ] **Task 74**: Design the markdown report structure in `src/core/reporting/template.ts` with executive summary, comprehension rating, viva readiness score, and file audit tables.
+- [x] **Task 74**: Design the markdown report structure in `src/core/reporting/template.ts` with executive summary, comprehension rating, viva readiness score, and file audit tables.
 
   ```bash
   git commit -m "feat: design markdown report template structure for portfolio export"
