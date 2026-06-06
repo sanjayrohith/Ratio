@@ -519,7 +519,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement per-file understanding ledger breakdown generator"
   ```
 
-- [ ] **Task 77**: Build concept mastery reporter in `src/core/reporting/concept-summary.ts` listing architectural concepts successfully defended versus bypassed or failed.
+- [x] **Task 77**: Build concept mastery reporter in `src/core/reporting/concept-summary.ts` listing architectural concepts successfully defended versus bypassed or failed.
 
   ```bash
   git commit -m "feat: implement concept mastery summary section in report generator"
