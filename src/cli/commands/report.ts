@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 import { Database } from 'bun:sqlite';
 import { getWorkspaceContext } from '../../storage/workspace.js';
 import { createDatabase, closeDatabase } from '../../storage/db.js';
@@ -117,6 +117,7 @@ export async function executeReport(options: ReportOptions = {}): Promise<Report
 
     const outputFileName = options.output ?? 'RATIO_REPORT.md';
     const outputPath = resolve(rootDir, outputFileName);
+    mkdirSync(dirname(outputPath), { recursive: true });
     writeFileSync(outputPath, markdown, 'utf-8');
 
     console.log(`\n✓ Portfolio audit report written to ${outputPath}`);

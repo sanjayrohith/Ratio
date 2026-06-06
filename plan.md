@@ -531,7 +531,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement ratio report command with file export and stdout flags"
   ```
 
-- [ ] **Task 79**: Write snapshot and unit tests in `test/reporting/report.test.ts` asserting correct markdown formatting, metrics calculation, and table structures.
+- [x] **Task 79**: Write snapshot and unit tests in `test/reporting/report.test.ts` asserting correct markdown formatting, metrics calculation, and table structures.
 
   ```bash
   git commit -m "test: add unit and snapshot tests for markdown report generation"
