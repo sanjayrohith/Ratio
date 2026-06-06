@@ -4,6 +4,7 @@ import { executeInit } from './commands/init.js';
 import { executeDoctor } from './commands/doctor.js';
 import { executeStatus } from './commands/status.js';
 import { executeLog } from './commands/log.js';
+import { executeReport } from './commands/report.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -92,6 +93,21 @@ export function createProgram(): Command {
         limit,
         status: options.status,
         file: options.file,
+        verbose,
+      });
+    });
+
+  program
+    .command('report')
+    .description('Generate shareable portfolio markdown report (RATIO_REPORT.md)')
+    .option('-o, --output <file>', 'output markdown file destination', 'RATIO_REPORT.md')
+    .option('--stdout', 'stream generated markdown report directly to stdout')
+    .action(async (options) => {
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      await executeReport({
+        output: options.output,
+        stdout: options.stdout,
         verbose,
       });
     });

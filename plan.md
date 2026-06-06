@@ -525,7 +525,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement concept mastery summary section in report generator"
   ```
 
-- [ ] **Task 78**: Implement `ratio report` CLI command in `src/cli/commands/report.ts` generating `RATIO_REPORT.md` in repository root, with `--output` and `--stdout` options.
+- [x] **Task 78**: Implement `ratio report` CLI command in `src/cli/commands/report.ts` generating `RATIO_REPORT.md` in repository root, with `--output` and `--stdout` options.
 
   ```bash
   git commit -m "feat: implement ratio report command with file export and stdout flags"
