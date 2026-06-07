@@ -563,7 +563,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add colorized terminal output and spinners for long-running cli actions"
   ```
 
-- [ ] **Task 84**: Standardize error handling and exit code conventions across all CLI commands (0 = success, 1 = user/configuration error, 2 = internal fatal error).
+- [x] **Task 84**: Standardize error handling and exit code conventions across all CLI commands (0 = success, 1 = user/configuration error, 2 = internal fatal error).
 
   ```bash
   git commit -m "refactor: unify error handling and exit codes across all cli commands"
