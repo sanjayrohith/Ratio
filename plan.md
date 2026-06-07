@@ -569,7 +569,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "refactor: unify error handling and exit codes across all cli commands"
   ```
 
-- [ ] **Task 85**: Add integration tests in `test/cli/config.test.ts` and `test/cli/report-json.test.ts` verifying CLI config modifications and JSON report schema compliance.
+- [x] **Task 85**: Add integration tests in `test/cli/config.test.ts` and `test/cli/report-json.test.ts` verifying CLI config modifications and JSON report schema compliance.
 
   ```bash
   git commit -m "test: add integration tests for config modification and json report export"
