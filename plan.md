@@ -539,7 +539,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 16 (6 tasks) — CLI Polish, Configuration Customization & Export Options
 
-- [ ] **Task 80**: Implement `ratio config get` and `ratio config set` in `src/cli/commands/config.ts` allowing command-line inspection and modification of threshold parameters.
+- [x] **Task 80**: Implement `ratio config get` and `ratio config set` in `src/cli/commands/config.ts` allowing command-line inspection and modification of threshold parameters.
 
   ```bash
   git commit -m "feat: implement ratio config get/set commands for threshold customization"

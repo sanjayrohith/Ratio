@@ -5,6 +5,7 @@ import { executeDoctor } from './commands/doctor.js';
 import { executeStatus } from './commands/status.js';
 import { executeLog } from './commands/log.js';
 import { executeReport } from './commands/report.js';
+import { executeConfigGet, executeConfigSet } from './commands/config.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -110,6 +111,28 @@ export function createProgram(): Command {
         stdout: options.stdout,
         verbose,
       });
+    });
+
+  const configCmd = program
+    .command('config')
+    .description('Inspect or modify Ratio configuration settings');
+
+  configCmd
+    .command('get [key]')
+    .description('Get a configuration value or display all settings')
+    .action(async (key) => {
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      await executeConfigGet(key, { verbose });
+    });
+
+  configCmd
+    .command('set <key> <value>')
+    .description('Set a configuration parameter')
+    .action(async (key, value) => {
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      await executeConfigSet(key, value, { verbose });
     });
 
   return program;
