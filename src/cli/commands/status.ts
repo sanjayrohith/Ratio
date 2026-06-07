@@ -6,6 +6,7 @@ import { createDatabase, closeDatabase } from '../../storage/db.js';
 import { TrustScoreRepository } from '../../storage/trust-repo.js';
 import { DynamicThresholdScaler } from '../../core/trust/scaler.js';
 import { loadRatioConfig } from '../../core/config/schema.js';
+import { pc } from '../ui.js';
 
 export interface StatusOptions {
   cwd?: string;
@@ -56,18 +57,19 @@ export function renderTrustTable(files: FileTrustStatus[]): void {
   const pad = (str: string, width: number) => str.padEnd(width);
 
   console.log(
-    `  ${pad('File Path', colFile)}  ${pad('Trust', 8)}  ${pad('Effective Limit', 18)}  ${pad('Pass / Fail', 12)}  ${pad('Last Updated', 19)}`
+    `  ${pc.bold(pad('File Path', colFile))}  ${pc.bold(pad('Trust', 8))}  ${pc.bold(pad('Effective Limit', 18))}  ${pc.bold(pad('Pass / Fail', 12))}  ${pc.bold(pad('Last Updated', 19))}`
   );
-  console.log(`  ${'-'.repeat(colFile + 65)}`);
+  console.log(`  ${pc.dim('-'.repeat(colFile + 65))}`);
 
   for (const file of files) {
     const scoreStr = file.trustScore.toFixed(2);
+    const coloredScore = file.trustScore >= 0.8 ? pc.green(scoreStr) : file.trustScore >= 0.5 ? pc.yellow(scoreStr) : pc.red(scoreStr);
     const limitStr = `+${file.effectiveLinesAdded} / -${file.effectiveLinesRemoved}`;
     const pfStr = `${file.totalPasses} / ${file.totalFailures}`;
     const dateStr = file.updatedAt ? file.updatedAt.replace('T', ' ').slice(0, 19) : '-';
 
     console.log(
-      `  ${pad(file.filePath, colFile)}  ${pad(scoreStr, 8)}  ${pad(limitStr, 18)}  ${pad(pfStr, 12)}  ${pad(dateStr, 19)}`
+      `  ${pad(file.filePath, colFile)}  ${pad(coloredScore, 8 + (coloredScore.length - scoreStr.length))}  ${pad(limitStr, 18)}  ${pad(pfStr, 12)}  ${pad(dateStr, 19)}`
     );
   }
   console.log('');

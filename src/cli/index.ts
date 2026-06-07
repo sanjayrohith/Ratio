@@ -7,6 +7,7 @@ import { executeLog } from './commands/log.js';
 import { executeReport } from './commands/report.js';
 import { executeConfigGet, executeConfigSet } from './commands/config.js';
 import { executeReset, executeClean } from './commands/reset.js';
+import { pc } from './ui.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -58,14 +59,14 @@ export function createProgram(): Command {
 
       console.log('\nRatio Environment Diagnostics:');
       for (const check of report.checks) {
-        const symbol = check.status === 'ok' ? '✓' : check.status === 'warn' ? '⚠' : '✗';
-        console.log(`  ${symbol} ${check.name}: ${check.message}`);
+        const symbol = check.status === 'ok' ? pc.green('✓') : check.status === 'warn' ? pc.yellow('⚠') : pc.red('✗');
+        console.log(`  ${symbol} ${pc.bold(check.name)}: ${check.message}`);
         if (verbose && check.details) {
-          console.log(`    Details: ${JSON.stringify(check.details)}`);
+          console.log(`    ${pc.dim('Details:')} ${JSON.stringify(check.details)}`);
         }
       }
       console.log(
-        `\nSummary: ${report.summary.passed} passed, ${report.summary.warnings} warnings, ${report.summary.failures} failures\n`
+        `\nSummary: ${pc.green(`${report.summary.passed} passed`)}, ${pc.yellow(`${report.summary.warnings} warnings`)}, ${pc.red(`${report.summary.failures} failures`)}\n`
       );
       if (!report.healthy) {
         process.exitCode = 1;

@@ -5,6 +5,7 @@ import { Database } from 'bun:sqlite';
 import { getWorkspaceContext } from '../../storage/workspace.js';
 import { createDatabase, closeDatabase } from '../../storage/db.js';
 import { loadRatioConfig } from '../../core/config/schema.js';
+import { pc } from '../ui.js';
 
 export interface ResetOptions {
   cwd?: string;
@@ -98,7 +99,7 @@ export async function executeReset(options: ResetOptions = {}): Promise<ResetRes
         `)
         .run(initialScore, now, options.file);
       filesReset = res.changes;
-      console.log(`✓ Reset trust score for ${options.file} to ${initialScore.toFixed(2)}`);
+      console.log(`${pc.green('✓')} Reset trust score for ${pc.cyan(options.file)} to ${initialScore.toFixed(2)}`);
     } else {
       const res = db
         .prepare(`
@@ -107,7 +108,7 @@ export async function executeReset(options: ResetOptions = {}): Promise<ResetRes
         `)
         .run(initialScore, now);
       filesReset = res.changes;
-      console.log(`✓ Reset ${filesReset} file trust score(s) to ${initialScore.toFixed(2)}`);
+      console.log(`${pc.green('✓')} Reset ${filesReset} file trust score(s) to ${initialScore.toFixed(2)}`);
     }
 
     return {
@@ -196,11 +197,11 @@ export async function executeClean(options: CleanOptions = {}): Promise<CleanRes
     // Reclaim disk space
     db.run('VACUUM;');
 
-    console.log(`✓ Cleaned SQLite ledger:`);
-    console.log(`  Purged Checkpoints:    ${checkpointsPurged}`);
-    console.log(`  Purged Interceptions:  ${interceptionsPurged}`);
-    console.log(`  Purged Sessions:       ${sessionsPurged}`);
-    console.log(`  Purged Pending Writes: ${pendingWritesPurged}`);
+    console.log(`${pc.green('✓')} Cleaned SQLite ledger:`);
+    console.log(`  Purged Checkpoints:    ${pc.bold(String(checkpointsPurged))}`);
+    console.log(`  Purged Interceptions:  ${pc.bold(String(interceptionsPurged))}`);
+    console.log(`  Purged Sessions:       ${pc.bold(String(sessionsPurged))}`);
+    console.log(`  Purged Pending Writes: ${pc.bold(String(pendingWritesPurged))}`);
 
     return {
       success: true,

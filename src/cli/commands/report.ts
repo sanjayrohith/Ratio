@@ -12,6 +12,7 @@ import {
   ReportData,
   renderMarkdownReport,
 } from '../../core/reporting/template.js';
+import { pc, createSpinner } from '../ui.js';
 
 export interface ReportOptions {
   cwd?: string;
@@ -126,9 +127,9 @@ export async function executeReport(options: ReportOptions = {}): Promise<Report
     writeFileSync(outputPath, isJson ? content + '\n' : content, 'utf-8');
 
     const formatName = isJson ? 'JSON report' : 'report';
-    console.log(`\n✓ Portfolio audit ${formatName} written to ${outputPath}`);
-    console.log(`  Viva Readiness Score: ${summary.vivaReadinessScore}/100 (${summary.comprehensionRating})`);
-    console.log(`  Pass Rate:            ${summary.passRate.toFixed(1)}%`);
+    console.log(`\n${pc.green('✓')} Portfolio audit ${formatName} written to ${pc.cyan(outputPath)}`);
+    console.log(`  Viva Readiness Score: ${pc.bold(`${summary.vivaReadinessScore}/100`)} (${pc.bold(summary.comprehensionRating)})`);
+    console.log(`  Pass Rate:            ${pc.bold(`${summary.passRate.toFixed(1)}%`)}`);
     console.log(`  Tracked Files:        ${files.length}`);
     console.log(`  Concepts Probed:      ${concepts.length}\n`);
 
