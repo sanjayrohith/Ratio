@@ -551,7 +551,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add json export format option to ratio report command"
   ```
 
-- [ ] **Task 82**: Implement `ratio reset` and `ratio clean` in `src/cli/commands/reset.ts` with interactive confirmation prompts to reset trust scores or purge old logs.
+- [x] **Task 82**: Implement `ratio reset` and `ratio clean` in `src/cli/commands/reset.ts` with interactive confirmation prompts to reset trust scores or purge old logs.
 
   ```bash
   git commit -m "feat: implement ledger reset and purge commands with safety prompts"

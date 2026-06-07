@@ -6,6 +6,7 @@ import { executeStatus } from './commands/status.js';
 import { executeLog } from './commands/log.js';
 import { executeReport } from './commands/report.js';
 import { executeConfigGet, executeConfigSet } from './commands/config.js';
+import { executeReset, executeClean } from './commands/reset.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
@@ -135,6 +136,39 @@ export function createProgram(): Command {
       const globalOpts = program.opts();
       const verbose = Boolean(globalOpts.verbose);
       await executeConfigSet(key, value, { verbose });
+    });
+
+  program
+    .command('reset')
+    .description('Reset per-file trust scores to initial values')
+    .option('-f, --file <path>', 'target specific file to reset')
+    .option('-y, --yes', 'skip interactive confirmation prompt')
+    .action(async (options) => {
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      await executeReset({
+        file: options.file,
+        yes: options.yes,
+        verbose,
+      });
+    });
+
+  program
+    .command('clean')
+    .description('Purge checkpoint history, interceptions, and old sessions from ledger')
+    .option('--all', 'purge all historical ledger data')
+    .option('-d, --days <number>', 'purge records older than specified number of days')
+    .option('-y, --yes', 'skip interactive confirmation prompt')
+    .action(async (options) => {
+      const globalOpts = program.opts();
+      const verbose = Boolean(globalOpts.verbose);
+      const days = options.days ? parseInt(options.days, 10) : undefined;
+      await executeClean({
+        all: options.all,
+        days,
+        yes: options.yes,
+        verbose,
+      });
     });
 
   return program;
