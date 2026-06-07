@@ -545,7 +545,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement ratio config get/set commands for threshold customization"
   ```
 
-- [ ] **Task 81**: Add `--json` export option to `ratio report` in `src/cli/commands/report.ts` enabling structured JSON data export for CI analysis or external dashboards.
+- [x] **Task 81**: Add `--json` export option to `ratio report` in `src/cli/commands/report.ts` enabling structured JSON data export for CI analysis or external dashboards.
 
   ```bash
   git commit -m "feat: add json export format option to ratio report command"

@@ -101,14 +101,16 @@ export function createProgram(): Command {
   program
     .command('report')
     .description('Generate shareable portfolio markdown report (RATIO_REPORT.md)')
-    .option('-o, --output <file>', 'output markdown file destination', 'RATIO_REPORT.md')
-    .option('--stdout', 'stream generated markdown report directly to stdout')
+    .option('-o, --output <file>', 'output report file destination')
+    .option('--stdout', 'stream generated report directly to stdout')
+    .option('--json', 'export structured JSON data for CI analysis or dashboards')
     .action(async (options) => {
       const globalOpts = program.opts();
       const verbose = Boolean(globalOpts.verbose);
       await executeReport({
         output: options.output,
         stdout: options.stdout,
+        json: options.json,
         verbose,
       });
     });

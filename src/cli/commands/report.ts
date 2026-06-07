@@ -17,6 +17,7 @@ export interface ReportOptions {
   cwd?: string;
   output?: string;
   stdout?: boolean;
+  json?: boolean;
   verbose?: boolean;
 }
 
@@ -103,38 +104,43 @@ export async function executeReport(options: ReportOptions = {}): Promise<Report
       evidence,
     };
 
-    const markdown = renderMarkdownReport(reportData);
+    const isJson = Boolean(options.json);
+    const content = isJson
+      ? JSON.stringify(reportData, null, 2)
+      : renderMarkdownReport(reportData);
 
     if (options.stdout) {
-      console.log(markdown);
+      console.log(content);
       return {
         initialized: true,
         rootDir,
-        reportContent: markdown,
+        reportContent: content,
         data: reportData,
       };
     }
 
-    const outputFileName = options.output ?? 'RATIO_REPORT.md';
+    const defaultFileName = isJson ? 'RATIO_REPORT.json' : 'RATIO_REPORT.md';
+    const outputFileName = options.output ?? defaultFileName;
     const outputPath = resolve(rootDir, outputFileName);
     mkdirSync(dirname(outputPath), { recursive: true });
-    writeFileSync(outputPath, markdown, 'utf-8');
+    writeFileSync(outputPath, isJson ? content + '\n' : content, 'utf-8');
 
-    console.log(`\n✓ Portfolio audit report written to ${outputPath}`);
+    const formatName = isJson ? 'JSON report' : 'report';
+    console.log(`\n✓ Portfolio audit ${formatName} written to ${outputPath}`);
     console.log(`  Viva Readiness Score: ${summary.vivaReadinessScore}/100 (${summary.comprehensionRating})`);
     console.log(`  Pass Rate:            ${summary.passRate.toFixed(1)}%`);
     console.log(`  Tracked Files:        ${files.length}`);
     console.log(`  Concepts Probed:      ${concepts.length}\n`);
 
     if (options.verbose) {
-      console.log(`[ratio:report] Generated ${markdown.length} bytes of report markdown`);
+      console.log(`[ratio:report] Generated ${content.length} bytes of report ${isJson ? 'JSON' : 'markdown'}`);
     }
 
     return {
       initialized: true,
       rootDir,
       outputPath,
-      reportContent: markdown,
+      reportContent: content,
       data: reportData,
     };
   } finally {
