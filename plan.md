@@ -583,7 +583,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement multi-file batch write transaction coordinator"
   ```
 
-- [ ] **Task 87**: Implement ticket timeout manager in `src/core/staging/timeout.ts` to expire abandoned pending writes after configurable timeout (e.g., 10 minutes) without deadlocking.
+- [x] **Task 87**: Implement ticket timeout manager in `src/core/staging/timeout.ts` to expire abandoned pending writes after configurable timeout (e.g., 10 minutes) without deadlocking.
 
   ```bash
   git commit -m "feat: implement deadlock detection and timeout handling for pending writes"
