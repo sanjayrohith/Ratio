@@ -595,7 +595,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement concurrent sqlite connection handling and busy retry logic"
   ```
 
-- [ ] **Task 89**: Write stress tests in `test/server/concurrency.test.ts` simulating concurrent tool calls and database transactions to verify consistency and lock handling.
+- [x] **Task 89**: Write stress tests in `test/server/concurrency.test.ts` simulating concurrent tool calls and database transactions to verify consistency and lock handling.
 
   ```bash
   git commit -m "test: add concurrency stress tests for simultaneous write requests"
