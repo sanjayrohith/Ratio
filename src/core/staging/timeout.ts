@@ -256,7 +256,7 @@ export class TicketTimeoutManager {
 
     // 2. Update Checkpoint ledger
     if (this.checkpointRepo) {
-      const cp = this.checkpointRepo.getCheckpoint(ticketId);
+      const cp = this.checkpointRepo.getByTicketId(ticketId);
       if (cp && cp.status === 'pending') {
         this.checkpointRepo.resolveCheckpoint({
           ticketId,

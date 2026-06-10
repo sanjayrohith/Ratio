@@ -601,7 +601,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add concurrency stress tests for simultaneous write requests"
   ```
 
-- [ ] **Task 90**: Write tests in `test/staging/timeout.test.ts` confirming abandoned staged writes expire cleanly and release locks for subsequent operations.
+- [x] **Task 90**: Write tests in `test/staging/timeout.test.ts` confirming abandoned staged writes expire cleanly and release locks for subsequent operations.
 
   ```bash
   git commit -m "test: add timeout and expiration tests for abandoned checkpoints"
