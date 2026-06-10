@@ -589,7 +589,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement deadlock detection and timeout handling for pending writes"
   ```
 
-- [ ] **Task 88**: Add SQLite connection retry logic with exponential backoff and 5000ms busy timeout in `src/storage/db.ts` to prevent `SQLITE_BUSY` errors under concurrent tool calls.
+- [x] **Task 88**: Add SQLite connection retry logic with exponential backoff and 5000ms busy timeout in `src/storage/db.ts` to prevent `SQLITE_BUSY` errors under concurrent tool calls.
 
   ```bash
   git commit -m "feat: implement concurrent sqlite connection handling and busy retry logic"
