@@ -577,7 +577,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 17 (5 tasks) — Multi-File Batch Interception & Concurrency Handling
 
-- [ ] **Task 86**: Implement `BatchTransactionCoordinator` in `src/core/staging/batch.ts` handling rapid multi-file writes in a single turn and computing cross-file layer impact.
+- [x] **Task 86**: Implement `BatchTransactionCoordinator` in `src/core/staging/batch.ts` handling rapid multi-file writes in a single turn and computing cross-file layer impact.
 
   ```bash
   git commit -m "feat: implement multi-file batch write transaction coordinator"
