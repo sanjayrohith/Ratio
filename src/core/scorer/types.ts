@@ -49,4 +49,6 @@ export interface ComplexityEvaluation {
   concept?: string;
   suggestedQuestion?: string;
   summary: string;
+  earlyExit?: boolean;
+  executionTimeMs?: number;
 }

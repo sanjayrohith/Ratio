@@ -609,7 +609,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 18 (7 tasks) — Performance Optimization & Low-Latency Enforcement (<50ms)
 
-- [ ] **Task 91**: Add early-exit optimizations in `ComplexityScorer` in `src/core/scorer/index.ts` to bypass heavy AST/regex checks for small diffs on trusted files in <5ms.
+- [x] **Task 91**: Add early-exit optimizations in `ComplexityScorer` in `src/core/scorer/index.ts` to bypass heavy AST/regex checks for small diffs on trusted files in <5ms.
 
   ```bash
   git commit -m "perf: optimize heuristic complexity scorer with early-exit conditions"

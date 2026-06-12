@@ -44,19 +44,81 @@ export class ComplexityScorer {
 
   /**
    * Evaluates proposed file changes against heuristic complexity thresholds and layer rules.
+   * Features fast early-exit conditions for identical content and small diffs on trusted files (<5ms).
    */
   public evaluate(
     filePath: string,
     originalContent: string,
     proposedContent: string,
-    turnId: string = 'default'
+    turnId: string = 'default',
+    options?: { trustScore?: number }
   ): ComplexityEvaluation {
+    const startTime = performance.now();
+
+    // Early-exit 1: Identical content (zero diff)
+    if (originalContent === proposedContent) {
+      const emptyLineDelta: LineDeltaMetrics = {
+        linesAdded: 0,
+        linesRemoved: 0,
+        totalLinesChanged: 0,
+        netLineDelta: 0,
+      };
+      const elapsed = performance.now() - startTime;
+      return {
+        exceedsThreshold: false,
+        triggers: [],
+        lineDelta: emptyLineDelta,
+        layers: this.tagger.tagPath(filePath),
+        layerTransitions: {
+          layersTouched: [],
+          filesTouched: [filePath],
+          isMultiLayer: false,
+          transitions: [],
+          summary: 'No changes detected (identical content).',
+        },
+        concept: 'NO_OP_CHANGE',
+        suggestedQuestion: 'No changes were made to the file.',
+        summary: 'Change approved: identical content (0 lines changed).',
+        earlyExit: true,
+        executionTimeMs: elapsed,
+      };
+    }
+
+    const manifestKind = detectManifestKind(filePath);
     const lineDelta = LineDeltaCalculator.calculate(originalContent, proposedContent);
+    const isTrusted = options?.trustScore !== undefined ? options.trustScore >= 0.8 : true;
+
+    // Early-exit 2: Small diff on trusted non-manifest file without layer transition triggers
+    const isSmallDiff =
+      lineDelta.totalLinesChanged <= Math.min(5, this.thresholds.maxTotalLinesChanged) &&
+      lineDelta.linesAdded <= Math.min(5, this.thresholds.maxLinesAdded) &&
+      lineDelta.linesRemoved <= Math.min(5, this.thresholds.maxLinesRemoved);
+
+    if (isTrusted && manifestKind === 'unknown' && isSmallDiff) {
+      const layers = this.tagger.tagPath(filePath);
+      const layerTransitions = this.transitionDetector.recordWrite(filePath, turnId);
+
+      if (!layerTransitions.isMultiLayer) {
+        const elapsed = performance.now() - startTime;
+        return {
+          exceedsThreshold: false,
+          triggers: [],
+          lineDelta,
+          layers,
+          layerTransitions,
+          concept: 'INCREMENTAL_EDIT',
+          suggestedQuestion: 'Minor incremental change within trusted threshold.',
+          summary: `Change approved: small diff on trusted file (${lineDelta.totalLinesChanged} lines changed).`,
+          earlyExit: true,
+          executionTimeMs: elapsed,
+        };
+      }
+    }
+
     const triggers: string[] = [];
 
     // 1. Dependency analysis
     let dependencyDiff: DependencyDiff | undefined;
-    const manifestKind = detectManifestKind(filePath);
     if (manifestKind !== 'unknown') {
       dependencyDiff = diffDependencies(filePath, originalContent, proposedContent);
       if (
@@ -129,6 +191,8 @@ export class ComplexityScorer {
       concept,
       suggestedQuestion,
       summary,
+      earlyExit: false,
+      executionTimeMs: performance.now() - startTime,
     };
   }
 
