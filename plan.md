@@ -627,7 +627,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "perf: optimize sqlite query indexes for checkpoint lookups and trust scores"
   ```
 
-- [ ] **Task 94**: Build a benchmarking script in `bench/interception-latency.ts` measuring end-to-end latency of MCP tool dispatch, scoring, and SQLite logging.
+- [x] **Task 94**: Build a benchmarking script in `bench/interception-latency.ts` measuring end-to-end latency of MCP tool dispatch, scoring, and SQLite logging.
 
   ```bash
   git commit -m "feat: implement latency benchmarking harness for tool call interceptor"
