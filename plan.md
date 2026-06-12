@@ -633,7 +633,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement latency benchmarking harness for tool call interceptor"
   ```
 
-- [ ] **Task 95**: Implement explicit stream buffer cleanup and prepared statement finalization in `src/server/transport.ts` to prevent memory leaks during long-running sessions.
+- [x] **Task 95**: Implement explicit stream buffer cleanup and prepared statement finalization in `src/server/transport.ts` to prevent memory leaks during long-running sessions.
 
   ```bash
   git commit -m "feat: add memory leak prevention and resource disposal for stdio streams"
