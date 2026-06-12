@@ -639,7 +639,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add memory leak prevention and resource disposal for stdio streams"
   ```
 
-- [ ] **Task 96**: Add automated latency regression tests in `test/bench/latency.test.ts` asserting that median added interception overhead remains strictly under 50ms.
+- [x] **Task 96**: Add automated latency regression tests in `test/bench/latency.test.ts` asserting that median added interception overhead remains strictly under 50ms.
 
   ```bash
   git commit -m "test: add benchmark regression tests validating interception latency under 50ms"
