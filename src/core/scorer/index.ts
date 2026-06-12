@@ -33,14 +33,14 @@ export class ComplexityScorer {
   constructor(
     thresholds: Partial<ScoringThresholds> = {},
     tagger: LayerTagger = defaultLayerTagger,
-    transitionDetector: LayerTransitionDetector = defaultTransitionDetector
+    transitionDetector?: LayerTransitionDetector
   ) {
     this.thresholds = {
       ...DEFAULT_SCORING_THRESHOLDS,
       ...thresholds,
     };
     this.tagger = tagger;
-    this.transitionDetector = transitionDetector;
+    this.transitionDetector = transitionDetector ?? new LayerTransitionDetector(this.tagger);
   }
 
   /**
@@ -210,4 +210,8 @@ export class ComplexityScorer {
   }
 }
 
-export const defaultComplexityScorer = new ComplexityScorer();
+export const defaultComplexityScorer = new ComplexityScorer(
+  DEFAULT_SCORING_THRESHOLDS,
+  defaultLayerTagger,
+  defaultTransitionDetector
+);

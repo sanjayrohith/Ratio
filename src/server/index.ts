@@ -7,6 +7,7 @@ import { registerTools } from './tools.js';
 import type { SubmitAnswerDependencies } from './tools/submit-answer.js';
 
 export { ManagedStdioTransport, PreparedStatementFinalizer, defaultStatementFinalizer };
+export { McpRequestDispatcher, RATIO_TOOLS } from './dispatcher.js';
 
 export const SERVER_NAME = 'ratio';
 export const SERVER_VERSION = '0.1.0';

@@ -645,7 +645,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add benchmark regression tests validating interception latency under 50ms"
   ```
 
-- [ ] **Task 97**: Refactor MCP JSON-RPC message dispatcher in `src/server/dispatcher.ts` to eliminate superfluous memory allocations in high-throughput coding sessions.
+- [x] **Task 97**: Refactor MCP JSON-RPC message dispatcher in `src/server/dispatcher.ts` to eliminate superfluous memory allocations in high-throughput coding sessions.
 
   ```bash
   git commit -m "refactor: streamline mcp request dispatching for high-throughput coding sessions"
