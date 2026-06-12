@@ -615,7 +615,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "perf: optimize heuristic complexity scorer with early-exit conditions"
   ```
 
-- [ ] **Task 92**: Implement memory caching in `src/core/scorer/cache.ts` for manifest file contents and compiled layer regex matchers to reduce disk I/O on repeated calls.
+- [x] **Task 92**: Implement memory caching in `src/core/scorer/cache.ts` for manifest file contents and compiled layer regex matchers to reduce disk I/O on repeated calls.
 
   ```bash
   git commit -m "perf: cache parsed package manifests and layer pattern regexes in memory"

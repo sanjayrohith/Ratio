@@ -19,6 +19,7 @@ export * from './layers.js';
 export * from './transitions.js';
 export * from './composite.js';
 export * from './pipeline/index.js';
+export * from './cache.js';
 
 /**
  * Heuristic complexity scorer evaluating line deltas, dependency additions,
