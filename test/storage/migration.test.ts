@@ -60,10 +60,10 @@ describe('SQLite Database & Migration Lifecycle Tests', () => {
     const db = createDatabase(':memory:');
     try {
       const appliedFirstTime = runMigrations(db);
-      expect(appliedFirstTime).toBe(4);
+      expect(appliedFirstTime).toBe(5);
 
       const migrations = getAppliedMigrations(db);
-      expect(migrations.length).toBe(4);
+      expect(migrations.length).toBe(5);
       expect(migrations[0].version).toBe(1);
       expect(migrations[0].name).toBe('001_initial_schema.sql');
       expect(migrations[1].version).toBe(2);
@@ -72,6 +72,8 @@ describe('SQLite Database & Migration Lifecycle Tests', () => {
       expect(migrations[2].name).toBe('003_pending_writes.sql');
       expect(migrations[3].version).toBe(4);
       expect(migrations[3].name).toBe('004_checkpoint_metrics.sql');
+      expect(migrations[4].version).toBe(5);
+      expect(migrations[4].name).toBe('005_performance_indexes.sql');
 
 
       // Verify tables exist
@@ -86,6 +88,17 @@ describe('SQLite Database & Migration Lifecycle Tests', () => {
       expect(tableNames).toContain('checkpoints');
       expect(tableNames).toContain('trust_scores');
       expect(tableNames).toContain('pending_writes');
+
+      // Verify composite indexes exist
+      const indexes = db
+        .query("SELECT name FROM sqlite_master WHERE type='index' ORDER BY name ASC;")
+        .all() as Array<{ name: string }>;
+      const indexNames = indexes.map((i) => i.name);
+      expect(indexNames).toContain('idx_trust_scores_file_updated');
+      expect(indexNames).toContain('idx_checkpoints_status_created');
+      expect(indexNames).toContain('idx_checkpoints_file_created');
+      expect(indexNames).toContain('idx_interceptions_file_created');
+      expect(indexNames).toContain('idx_pending_writes_status_created');
 
       // Running migrations again is idempotent (no-op)
       const appliedSecondTime = runMigrations(db);

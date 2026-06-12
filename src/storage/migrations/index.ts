@@ -137,6 +137,14 @@ ALTER TABLE checkpoints ADD COLUMN detected_keywords TEXT;
 ALTER TABLE checkpoints ADD COLUMN is_evasive INTEGER NOT NULL DEFAULT 0;
 `;
 
+export const PERFORMANCE_INDEXES_MIGRATION_SQL = `
+CREATE INDEX IF NOT EXISTS idx_trust_scores_file_updated ON trust_scores(file_path, updated_at);
+CREATE INDEX IF NOT EXISTS idx_checkpoints_status_created ON checkpoints(status, created_at);
+CREATE INDEX IF NOT EXISTS idx_checkpoints_file_created ON checkpoints(file_path, created_at);
+CREATE INDEX IF NOT EXISTS idx_interceptions_file_created ON interceptions(file_path, created_at);
+CREATE INDEX IF NOT EXISTS idx_pending_writes_status_created ON pending_writes(status, created_at);
+`;
+
 /**
  * Embedded migrations list fallback if running in bundled environment.
  */
@@ -160,6 +168,11 @@ const EMBEDDED_MIGRATIONS: Array<{ version: number; name: string; sql: string }>
     version: 4,
     name: '004_checkpoint_metrics.sql',
     sql: CHECKPOINT_METRICS_MIGRATION_SQL,
+  },
+  {
+    version: 5,
+    name: '005_performance_indexes.sql',
+    sql: PERFORMANCE_INDEXES_MIGRATION_SQL,
   },
 ];
 

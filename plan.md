@@ -621,7 +621,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "perf: cache parsed package manifests and layer pattern regexes in memory"
   ```
 
-- [ ] **Task 93**: Add composite indexes in `src/storage/migrations/003_performance_indexes.sql` on `(file_path, updated_at)` and `(status, created_at)` for sub-millisecond queries.
+- [x] **Task 93**: Add composite indexes in `src/storage/migrations/003_performance_indexes.sql` on `(file_path, updated_at)` and `(status, created_at)` for sub-millisecond queries.
 
   ```bash
   git commit -m "perf: optimize sqlite query indexes for checkpoint lookups and trust scores"
