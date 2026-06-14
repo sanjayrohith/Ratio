@@ -695,7 +695,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement graceful fallback when agent bypasses mcp and writes directly"
   ```
 
-- [ ] **Task 105**: Run end-to-end dogfooding test in `test/dogfood/hackathon.test.ts` verifying that building a standard full-stack feature triggers between 5 and 15 checkpoints.
+- [x] **Task 105**: Run end-to-end dogfooding test in `test/dogfood/hackathon.test.ts` verifying that building a standard full-stack feature triggers between 5 and 15 checkpoints.
 
   ```bash
   git commit -m "test: run automated dogfooding suite against simulated hackathon repo"

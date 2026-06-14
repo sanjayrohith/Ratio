@@ -41,7 +41,7 @@ export async function safeReadFile(
   try {
     return await fs.readFile(filePath, { encoding });
   } catch (error: any) {
-    if (error.code === 'ENOENT') {
+    if (error.code === 'ENOENT' || error.code === 'EISDIR') {
       return null;
     }
     throw error;

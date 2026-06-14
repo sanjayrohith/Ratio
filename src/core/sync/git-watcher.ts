@@ -1,5 +1,5 @@
 import { resolve, join } from 'node:path';
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { safeReadFile } from '../../storage/fs.js';
 
 export interface BypassedChange {
@@ -63,7 +63,7 @@ export class GitWatcher {
     }
 
     try {
-      const proc = Bun.spawn(['git', 'status', '--porcelain'], {
+      const proc = Bun.spawn(['git', 'status', '--porcelain', '-uall'], {
         cwd: this.workspaceRoot,
         stderr: 'pipe',
       });
@@ -116,9 +116,13 @@ export class GitWatcher {
       if (!isLogged) {
         // Inspect content to approximate line delta
         let lineCount = 0;
-        if (existsSync(absPath)) {
-          const content = (await safeReadFile(absPath)) ?? '';
-          lineCount = content.length > 0 ? content.split('\n').length : 0;
+        try {
+          if (existsSync(absPath) && statSync(absPath).isFile()) {
+            const content = (await safeReadFile(absPath)) ?? '';
+            lineCount = content.length > 0 ? content.split('\n').length : 0;
+          }
+        } catch {
+          // Ignore
         }
 
         bypassed.push({
