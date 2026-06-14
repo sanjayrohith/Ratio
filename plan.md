@@ -701,7 +701,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: run automated dogfooding suite against simulated hackathon repo"
   ```
 
-- [ ] **Task 106**: Write security boundary tests in `test/security/path-traversal.test.ts` attempting directory escapes via `../`, null bytes, and symlinks, asserting all are blocked.
+- [x] **Task 106**: Write security boundary tests in `test/security/path-traversal.test.ts` attempting directory escapes via `../`, null bytes, and symlinks, asserting all are blocked.
 
   ```bash
   git commit -m "test: add security boundary tests verifying path traversal prevention"
