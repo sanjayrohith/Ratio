@@ -683,7 +683,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "fix: handle binary file writes and non-text asset bypass"
   ```
 
-- [ ] **Task 103**: Add path canonicalization and sandbox boundary validation in `src/core/security/path.ts` preventing writes outside the repository root.
+- [x] **Task 103**: Add path canonicalization and sandbox boundary validation in `src/core/security/path.ts` preventing writes outside the repository root.
 
   ```bash
   git commit -m "fix: prevent path traversal attacks in ratio_write_file targets"

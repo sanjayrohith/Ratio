@@ -22,6 +22,7 @@ import {
   handleSubmitAnswer,
   type SubmitAnswerDependencies,
 } from './tools/submit-answer.js';
+import { validateSafeWritePath } from '../core/security/path.js';
 
 export const RATIO_TOOLS = [
   {
@@ -186,11 +187,12 @@ export class McpRequestDispatcher {
 
   private async handleWriteFile(rawArgs: unknown): Promise<CallToolResult> {
     const parsed = WriteFileInputSchema.parse(rawArgs);
-    const existing = (await safeReadFile(parsed.path)) ?? '';
-    const evaluation = this.scorer.evaluate(parsed.path, existing, parsed.content, this.currentTurnId);
+    const safePath = validateSafeWritePath(parsed.path);
+    const existing = (await safeReadFile(safePath)) ?? '';
+    const evaluation = this.scorer.evaluate(safePath, existing, parsed.content, this.currentTurnId);
 
     if (!evaluation.exceedsThreshold) {
-      const writeResult = await atomicWriteFile(parsed.path, parsed.content);
+      const writeResult = await atomicWriteFile(safePath, parsed.content);
       const permitted: WritePermittedResponse = {
         status: 'write_permitted',
         file: parsed.path,
@@ -206,7 +208,7 @@ export class McpRequestDispatcher {
     const concept = evaluation.concept ?? 'ARCHITECTURAL_RATIONALE';
 
     const staged = this.stagingBuffer.stage({
-      file: parsed.path,
+      file: safePath,
       content: parsed.content,
       operation: 'write',
       question,
@@ -260,16 +262,17 @@ export class McpRequestDispatcher {
 
   private async handleEditFile(rawArgs: unknown): Promise<CallToolResult> {
     const parsed = EditFileInputSchema.parse(rawArgs);
-    const existing = (await safeReadFile(parsed.path)) ?? '';
+    const safePath = validateSafeWritePath(parsed.path);
+    const existing = (await safeReadFile(safePath)) ?? '';
     const patchedContent =
       existing !== ''
         ? applyEdits(existing, parsed.edits)
         : parsed.edits.map((e) => e.newText).join('\n');
 
-    const evaluation = this.scorer.evaluate(parsed.path, existing, patchedContent, this.currentTurnId);
+    const evaluation = this.scorer.evaluate(safePath, existing, patchedContent, this.currentTurnId);
 
     if (!evaluation.exceedsThreshold) {
-      const writeResult = await atomicWriteFile(parsed.path, patchedContent);
+      const writeResult = await atomicWriteFile(safePath, patchedContent);
       const permitted: WritePermittedResponse = {
         status: 'write_permitted',
         file: parsed.path,
@@ -285,7 +288,7 @@ export class McpRequestDispatcher {
     const concept = evaluation.concept ?? 'ARCHITECTURAL_RATIONALE';
 
     const staged = this.stagingBuffer.stage({
-      file: parsed.path,
+      file: safePath,
       content: patchedContent,
       operation: 'edit',
       question,
