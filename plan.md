@@ -665,7 +665,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement mock opencode client harness for dual-agent verification"
   ```
 
-- [ ] **Task 100**: Create simulation script in `scripts/simulate-feature.ts` modeling the PRD demo flow: Express app adding JWT authentication middleware and database migration.
+- [x] **Task 100**: Create simulation script in `scripts/simulate-feature.ts` modeling the PRD demo flow: Express app adding JWT authentication middleware and database migration.
 
   ```bash
   git commit -m "feat: implement end-to-end full-stack feature simulation script"
