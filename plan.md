@@ -707,7 +707,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: add security boundary tests verifying path traversal prevention"
   ```
 
-- [ ] **Task 107**: Refactor internal event emitter and logger in `src/core/logger.ts` to support clean structured output and formatted tracing when `RATIO_DEBUG=1`.
+- [x] **Task 107**: Refactor internal event emitter and logger in `src/core/logger.ts` to support clean structured output and formatted tracing when `RATIO_DEBUG=1`.
 
   ```bash
   git commit -m "refactor: clean up internal event emitter and logger for debug visibility"
