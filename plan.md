@@ -653,7 +653,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 19 (10 tasks) — Agent Compatibility Suite & Dogfooding Simulation
 
-- [ ] **Task 98**: Build mock Claude Code client simulator in `test/harness/mock-claude.ts` exercising stdio transport, tool invocation, and question relaying behavior.
+- [x] **Task 98**: Build mock Claude Code client simulator in `test/harness/mock-claude.ts` exercising stdio transport, tool invocation, and question relaying behavior.
 
   ```bash
   git commit -m "feat: implement mock claude code client harness for integration testing"
