@@ -11,17 +11,61 @@ export class PatchError extends Error {
 }
 
 /**
+ * Checks whether content represents an empty, zero-byte file.
+ */
+export function isZeroByteContent(content: string): boolean {
+  return content.length === 0;
+}
+
+/**
+ * Checks whether a proposed patch or write intends to completely delete the file content.
+ */
+export function isFileDeletion(originalContent: string, newContent: string): boolean {
+  return originalContent.length > 0 && newContent.length === 0;
+}
+
+/**
  * Applies a single edit chunk to the content, optionally constrained by line range.
+ * Supports zero-byte file initialization, empty replacement strings (deletions),
+ * and pure insertions.
  */
 export function applySingleChunk(content: string, edit: FileEditChunk): string {
   const { oldText, newText, startLine, endLine } = edit;
 
-  if (oldText === '') {
-    // If oldText is empty, prepend or append? In diff tools, oldText shouldn't be empty unless inserting.
-    throw new PatchError('Target oldText to replace cannot be empty string.', edit);
+  // Case 1: Original content is empty (zero-byte file creation or initialization)
+  if (content === '') {
+    if (oldText === '' || oldText === content) {
+      return newText;
+    }
+    throw new PatchError(
+      'Target file is empty but non-empty oldText was specified to replace.',
+      edit
+    );
   }
 
-  // If line range is specified, restrict search to that line window
+  // Case 2: No-op edit (both oldText and newText are empty)
+  if (oldText === '' && newText === '') {
+    return content;
+  }
+
+  // Case 3: Pure insertion (oldText is empty, newText has content)
+  if (oldText === '') {
+    if (startLine !== undefined) {
+      const lines = content.split('\n');
+      const targetIndex = Math.max(0, Math.min(lines.length, startLine - 1));
+      lines.splice(targetIndex, 0, newText);
+      return lines.join('\n');
+    }
+    // Append at the end if no startLine specified
+    return content + (content.endsWith('\n') ? '' : '\n') + newText;
+  }
+
+  // Case 4: Complete file truncation / content deletion
+  if (oldText === content && newText === '') {
+    return '';
+  }
+
+  // Case 5: If line range is specified, restrict search to that line window
   if (startLine !== undefined || endLine !== undefined) {
     const lines = content.split('\n');
     const totalLines = lines.length;
@@ -54,12 +98,14 @@ export function applySingleChunk(content: string, edit: FileEditChunk): string {
       newText +
       targetSlice.substring(indexInTarget + oldText.length);
 
-    // Reassemble full content
+    // Reassemble full content cleanly
     const parts: string[] = [];
     if (fromLine > 1) {
       parts.push(beforeSlice);
     }
-    parts.push(replacedTarget);
+    if (replacedTarget.length > 0 || (beforeSlice.length === 0 && afterSlice.length === 0)) {
+      parts.push(replacedTarget);
+    }
     if (toLine < totalLines) {
       parts.push(afterSlice);
     }
@@ -67,7 +113,7 @@ export function applySingleChunk(content: string, edit: FileEditChunk): string {
     return parts.join('\n');
   }
 
-  // No line range specified: find exact substring match
+  // Case 6: No line range specified: find exact substring match
   const matchIndex = content.indexOf(oldText);
   if (matchIndex === -1) {
     throw new PatchError(`Target text to replace was not found in the file content.`, edit);
