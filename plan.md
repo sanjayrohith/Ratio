@@ -677,7 +677,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "fix: handle edge case where agent sends empty file edits or deletions"
   ```
 
-- [ ] **Task 102**: Add binary and media file detection in `src/core/scorer/binary.ts` to bypass conceptual checkpoints for images and fonts while maintaining ledger tracking.
+- [x] **Task 102**: Add binary and media file detection in `src/core/scorer/binary.ts` to bypass conceptual checkpoints for images and fonts while maintaining ledger tracking.
 
   ```bash
   git commit -m "fix: handle binary file writes and non-text asset bypass"

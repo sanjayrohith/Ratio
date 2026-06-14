@@ -20,6 +20,8 @@ export * from './transitions.js';
 export * from './composite.js';
 export * from './pipeline/index.js';
 export * from './cache.js';
+export * from './binary.js';
+import { isNonTextAsset, getBinaryAssetCategory } from './binary.js';
 
 /**
  * Heuristic complexity scorer evaluating line deltas, dependency additions,
@@ -45,7 +47,7 @@ export class ComplexityScorer {
 
   /**
    * Evaluates proposed file changes against heuristic complexity thresholds and layer rules.
-   * Features fast early-exit conditions for identical content and small diffs on trusted files (<5ms).
+   * Features fast early-exit conditions for identical content, binary assets, and small diffs on trusted files (<5ms).
    */
   public evaluate(
     filePath: string,
@@ -55,6 +57,36 @@ export class ComplexityScorer {
     options?: { trustScore?: number }
   ): ComplexityEvaluation {
     const startTime = performance.now();
+
+    // Early-exit 0: Binary and media file bypass (images, fonts, audio, video, archives)
+    if (isNonTextAsset(filePath, proposedContent)) {
+      const category = getBinaryAssetCategory(filePath);
+      const emptyLineDelta: LineDeltaMetrics = {
+        linesAdded: 0,
+        linesRemoved: 0,
+        totalLinesChanged: 0,
+        netLineDelta: 0,
+      };
+      const elapsed = performance.now() - startTime;
+      return {
+        exceedsThreshold: false,
+        triggers: [],
+        lineDelta: emptyLineDelta,
+        layers: this.tagger.tagPath(filePath),
+        layerTransitions: {
+          layersTouched: [],
+          filesTouched: [filePath],
+          isMultiLayer: false,
+          transitions: [],
+          summary: `Binary asset bypass (${category}).`,
+        },
+        concept: 'BINARY_ASSET',
+        suggestedQuestion: 'Binary or media asset bypassed conceptual checkpoint.',
+        summary: `Change approved: binary/media asset bypass (${category}).`,
+        earlyExit: true,
+        executionTimeMs: elapsed,
+      };
+    }
 
     // Early-exit 1: Identical content (zero diff)
     if (originalContent === proposedContent) {
