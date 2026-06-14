@@ -18,9 +18,11 @@ export function registerTools(
   server: Server,
   stagingBuffer: StagingBuffer = defaultStagingBuffer,
   scorer: ComplexityScorer = defaultComplexityScorer,
-  deps: SubmitAnswerDependencies = {}
+  deps: SubmitAnswerDependencies = {},
+  turnId: string = 'default',
+  workspaceRoot?: string
 ): McpRequestDispatcher {
-  const dispatcher = new McpRequestDispatcher(stagingBuffer, scorer, deps);
+  const dispatcher = new McpRequestDispatcher(stagingBuffer, scorer, deps, turnId, workspaceRoot);
   dispatcher.registerWithServer(server);
   return dispatcher;
 }

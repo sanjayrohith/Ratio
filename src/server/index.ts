@@ -18,7 +18,9 @@ export const SERVER_VERSION = '0.1.0';
 export function createRatioServer(
   stagingBuffer?: StagingBuffer,
   scorer?: ComplexityScorer,
-  deps?: SubmitAnswerDependencies
+  deps?: SubmitAnswerDependencies,
+  turnId?: string,
+  workspaceRoot?: string
 ): Server {
   const server = new Server(
     {
@@ -32,7 +34,7 @@ export function createRatioServer(
     }
   );
 
-  registerTools(server, stagingBuffer, scorer, deps);
+  registerTools(server, stagingBuffer, scorer, deps, turnId, workspaceRoot);
 
   return server;
 }

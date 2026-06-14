@@ -689,7 +689,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "fix: prevent path traversal attacks in ratio_write_file targets"
   ```
 
-- [ ] **Task 104**: Implement git-based change detection in `src/core/sync/git-watcher.ts` flagging untracked direct file writes that bypassed Ratio MCP tools.
+- [x] **Task 104**: Implement git-based change detection in `src/core/sync/git-watcher.ts` flagging untracked direct file writes that bypassed Ratio MCP tools.
 
   ```bash
   git commit -m "feat: implement graceful fallback when agent bypasses mcp and writes directly"

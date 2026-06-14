@@ -1,5 +1,6 @@
 import { resolve, normalize, relative, isAbsolute } from 'node:path';
 import { realpathSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 
 export class PathSecurityError extends Error {
   constructor(message: string, public readonly path?: string) {
@@ -22,7 +23,7 @@ export function isPathInside(childPath: string, parentDir: string): boolean {
  */
 export function validateSafeWritePath(
   targetPath: string,
-  workspaceRoot: string = process.cwd()
+  workspaceRoot?: string
 ): string {
   // 1. Check for null byte poisoning
   if (targetPath.includes('\0')) {
@@ -34,15 +35,25 @@ export function validateSafeWritePath(
     throw new PathSecurityError('Target path must not be empty.', targetPath);
   }
 
-  // 2. Canonicalize workspace root
-  const canonicalRoot = existsSync(workspaceRoot)
-    ? realpathSync(resolve(workspaceRoot))
-    : resolve(workspaceRoot);
+  const allowedRoots = workspaceRoot
+    ? [existsSync(workspaceRoot) ? realpathSync(resolve(workspaceRoot)) : resolve(workspaceRoot)]
+    : [
+        existsSync(process.cwd()) ? realpathSync(resolve(process.cwd())) : resolve(process.cwd()),
+        existsSync(tmpdir()) ? realpathSync(resolve(tmpdir())) : resolve(tmpdir()),
+      ];
 
-  // 3. Resolve target path against workspace root
+  const primaryRoot = allowedRoots[0];
   const resolvedTarget = isAbsolute(trimmed)
     ? resolve(trimmed)
-    : resolve(canonicalRoot, trimmed);
+    : resolve(primaryRoot, trimmed);
+
+  const matchedRoot = allowedRoots.find((root) => isPathInside(resolvedTarget, root));
+  if (!matchedRoot) {
+    throw new PathSecurityError(
+      `Access denied: path escapes workspace boundary: "${targetPath}"`,
+      targetPath
+    );
+  }
 
   // 4. Resolve symlinks on existing ancestors to prevent symlink traversal escapes
   let currentCheck = resolvedTarget;
@@ -61,28 +72,22 @@ export function validateSafeWritePath(
     }
   }
 
-  if (!isPathInside(realAncestor, canonicalRoot)) {
+  if (!isPathInside(realAncestor, matchedRoot)) {
     throw new PathSecurityError(
       `Access denied: path escapes workspace boundary via symlink or parent resolution: "${targetPath}"`,
       targetPath
     );
   }
 
-  // 5. Verify resolved target is inside canonical workspace
-  if (!isPathInside(resolvedTarget, canonicalRoot)) {
-    throw new PathSecurityError(
-      `Access denied: path escapes workspace boundary: "${targetPath}"`,
-      targetPath
-    );
-  }
-
   // 6. Block writes into sensitive internal directories (.git)
-  const relativeToRoot = relative(canonicalRoot, resolvedTarget);
-  const normalizedRel = normalize(relativeToRoot).replace(/\\/g, '/');
+  const relativeToMatched = relative(matchedRoot, resolvedTarget);
+  const normalizedRel = normalize(relativeToMatched).replace(/\\/g, '/');
   if (
     normalizedRel === '.git' ||
     normalizedRel.startsWith('.git/') ||
-    normalizedRel.includes('/.git/')
+    normalizedRel.includes('/.git/') ||
+    resolvedTarget.replace(/\\/g, '/').includes('/.git/') ||
+    resolvedTarget.replace(/\\/g, '/').endsWith('/.git')
   ) {
     throw new PathSecurityError(
       `Access denied: writing to .git directory is prohibited: "${targetPath}"`,

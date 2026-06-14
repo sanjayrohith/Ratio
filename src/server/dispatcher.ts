@@ -108,6 +108,7 @@ export class McpRequestDispatcher {
   private readonly scorer: ComplexityScorer;
   private readonly deps: SubmitAnswerDependencies;
   private readonly handlers: Map<string, ToolHandler>;
+  private readonly workspaceRoot?: string;
   private currentTurnId: string;
 
   // Static cached response for ListTools to avoid array cloning on repeated handshakes
@@ -119,12 +120,14 @@ export class McpRequestDispatcher {
     stagingBuffer: StagingBuffer = defaultStagingBuffer,
     scorer: ComplexityScorer = defaultComplexityScorer,
     deps: SubmitAnswerDependencies = {},
-    turnId: string = 'default'
+    turnId: string = 'default',
+    workspaceRoot?: string
   ) {
     this.stagingBuffer = stagingBuffer;
     this.scorer = scorer;
     this.deps = deps;
     this.currentTurnId = turnId;
+    this.workspaceRoot = workspaceRoot;
 
     // Pre-bind and register tool handlers into map for O(1) non-allocating lookups
     this.handlers = new Map<string, ToolHandler>([
@@ -187,9 +190,9 @@ export class McpRequestDispatcher {
 
   private async handleWriteFile(rawArgs: unknown): Promise<CallToolResult> {
     const parsed = WriteFileInputSchema.parse(rawArgs);
-    const safePath = validateSafeWritePath(parsed.path);
+    const safePath = validateSafeWritePath(parsed.path, this.workspaceRoot);
     const existing = (await safeReadFile(safePath)) ?? '';
-    const evaluation = this.scorer.evaluate(safePath, existing, parsed.content, this.currentTurnId);
+    const evaluation = this.scorer.evaluate(parsed.path, existing, parsed.content, this.currentTurnId);
 
     if (!evaluation.exceedsThreshold) {
       const writeResult = await atomicWriteFile(safePath, parsed.content);
@@ -208,7 +211,7 @@ export class McpRequestDispatcher {
     const concept = evaluation.concept ?? 'ARCHITECTURAL_RATIONALE';
 
     const staged = this.stagingBuffer.stage({
-      file: safePath,
+      file: parsed.path,
       content: parsed.content,
       operation: 'write',
       question,
@@ -262,14 +265,14 @@ export class McpRequestDispatcher {
 
   private async handleEditFile(rawArgs: unknown): Promise<CallToolResult> {
     const parsed = EditFileInputSchema.parse(rawArgs);
-    const safePath = validateSafeWritePath(parsed.path);
+    const safePath = validateSafeWritePath(parsed.path, this.workspaceRoot);
     const existing = (await safeReadFile(safePath)) ?? '';
     const patchedContent =
       existing !== ''
         ? applyEdits(existing, parsed.edits)
         : parsed.edits.map((e) => e.newText).join('\n');
 
-    const evaluation = this.scorer.evaluate(safePath, existing, patchedContent, this.currentTurnId);
+    const evaluation = this.scorer.evaluate(parsed.path, existing, patchedContent, this.currentTurnId);
 
     if (!evaluation.exceedsThreshold) {
       const writeResult = await atomicWriteFile(safePath, patchedContent);
@@ -288,7 +291,7 @@ export class McpRequestDispatcher {
     const concept = evaluation.concept ?? 'ARCHITECTURAL_RATIONALE';
 
     const staged = this.stagingBuffer.stage({
-      file: safePath,
+      file: parsed.path,
       content: patchedContent,
       operation: 'edit',
       question,
