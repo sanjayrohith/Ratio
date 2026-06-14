@@ -659,7 +659,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: implement mock claude code client harness for integration testing"
   ```
 
-- [ ] **Task 99**: Build mock opencode client simulator in `test/harness/mock-opencode.ts` verifying JSON-RPC compliance and tool interaction across different agent engines.
+- [x] **Task 99**: Build mock opencode client simulator in `test/harness/mock-opencode.ts` verifying JSON-RPC compliance and tool interaction across different agent engines.
 
   ```bash
   git commit -m "feat: implement mock opencode client harness for dual-agent verification"
