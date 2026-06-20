@@ -1,6 +1,6 @@
 {
   "name": "ratio",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A Socratic Interceptor for AI Coding Agents",
   "type": "module",
   "main": "src/server/index.ts",

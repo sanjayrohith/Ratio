@@ -26,7 +26,7 @@ export function createProgram(): Command {
   program
     .name('ratio')
     .description('A Socratic Interceptor for AI Coding Agents')
-    .version('0.1.0', '-V, --version', 'output the version number')
+    .version('1.0.0', '-V, --version', 'output the version number')
     .option('-v, --verbose', 'enable verbose logging and debug output');
 
   program

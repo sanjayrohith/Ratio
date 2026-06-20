@@ -769,7 +769,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "test: execute full end-to-end smoke test across compiled distribution binaries"
   ```
 
-- [ ] **Task 117**: Finalize version `1.0.0` in `package.json`, generate `CHANGELOG.md` detailing the entire development roadmap, and verify MIT license in `LICENSE`.
+- [x] **Task 117**: Finalize version `1.0.0` in `package.json`, generate `CHANGELOG.md` detailing the entire development roadmap, and verify MIT license in `LICENSE`.
 
   ```bash
   git commit -m "chore: finalize version 1.0.0 release metadata, changelog, and license files"
