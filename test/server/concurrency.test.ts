@@ -78,7 +78,7 @@ describe('Server & Database Concurrency Stress Tests', () => {
       for (const res of results) {
         expect(res.isError).toBeFalsy();
         expect(res.content).toBeArray();
-        const payload = JSON.parse((res.content[0] as any).text);
+        const payload = JSON.parse(((res.content as any)[0] as any).text);
         expect(payload.status).toBe('checkpoint_required');
         expect(payload.ticketId).toBeDefined();
         expect(payload.question).toBeDefined();

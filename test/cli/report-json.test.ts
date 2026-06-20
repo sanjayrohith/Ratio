@@ -230,8 +230,8 @@ describe('Ratio CLI Report --json Integration & Schema Compliance Tests', () => 
     expect(dbConcept!.masteryStatus).toBe('Vulnerable');
 
     // 4. Verify evidence trail
-    expect(parsed.evidence.length).toBe(2);
-    const entry1 = parsed.evidence.find((e) => e.ticketId === 't-101');
+    expect(parsed.evidence!.length).toBe(2);
+    const entry1 = parsed.evidence!.find((e) => e.ticketId === 't-101');
     expect(entry1).toBeDefined();
     expect(entry1!.filePath).toBe('src/auth/jwt.ts');
     expect(entry1!.status).toBe('passed');

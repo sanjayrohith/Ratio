@@ -145,7 +145,7 @@ describe('McpRequestDispatcher Unit & High-Throughput Tests', () => {
       });
 
       expect(callResult.isError).toBeFalsy();
-      const payload = JSON.parse((callResult.content[0] as any).text);
+      const payload = JSON.parse(((callResult.content as any)[0] as any).text);
       expect(payload.status).toBe('write_permitted');
     } finally {
       await client.close();

@@ -199,7 +199,7 @@ export class MockClaudeClient {
     return [...this.relayedQuestions];
   }
 
-  public getCallHistory(): readonly Array<{ tool: string; args: any; response: any; timestamp: number }> {
+  public getCallHistory(): ReadonlyArray<{ tool: string; args: any; response: any; timestamp: number }> {
     return [...this.callHistory];
   }
 

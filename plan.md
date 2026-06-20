@@ -733,7 +733,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "docs: create sample ratio report showcase artifact in documentation"
   ```
 
-- [ ] **Task 111**: Create GitHub Actions workflow in `.github/workflows/ci.yml` running linting, TypeScript typecheck, and Bun test suite across Linux and macOS runners.
+- [x] **Task 111**: Create GitHub Actions workflow in `.github/workflows/ci.yml` running linting, TypeScript typecheck, and Bun test suite across Linux and macOS runners.
 
   ```bash
   git commit -m "ci: implement github actions workflow for automated testing and linting"

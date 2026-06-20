@@ -108,7 +108,7 @@ describe('Hackathon Repository Dogfooding Simulation (End-to-End)', () => {
     );
 
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-    const client = new MockClaudeClient({ autoRelayAnswers: false });
+    const client = new MockClaudeClient({ autoAnswer: false });
 
     await server.connect(serverTransport);
     await client.connect(clientTransport);
@@ -543,7 +543,7 @@ export default app;
     expect(totalRecorded).toBe(checkpointCount);
 
     // Verify GitWatcher detects tracked state
-    const watcher = new GitWatcher(tempDir);
+    const watcher = new GitWatcher({ workspaceRoot: tempDir });
     const bypassed = await watcher.detectBypassedWrites(['src/index.ts', 'package.json']);
     expect(bypassed).toBeArray();
 

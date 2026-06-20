@@ -311,7 +311,7 @@ export async function runFeatureSimulation(
       status: step4Res.permitted ? 'write_permitted' : 'failed',
     });
 
-    sessionRepo.endSession(sessionId, {
+    sessionRepo.endSession(sessionId, undefined, {
       filesCommitted: steps.filter((s) => s.status === 'write_permitted').length,
       checkpointsCount: steps.filter((s) => s.checkpointTriggered).length,
     });

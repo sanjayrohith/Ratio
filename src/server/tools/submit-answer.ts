@@ -8,6 +8,7 @@ import { TrustScoreRepository } from '../../storage/trust-repo.js';
 import { CheckpointRepository } from '../../storage/checkpoint-repo.js';
 import { TrustScoreCoordinator } from '../../core/trust/coordinator.js';
 import { atomicWriteFile } from '../../storage/fs.js';
+import type { SessionRepository } from '../../storage/session-repo.js';
 
 export const SubmitAnswerInputSchema = z
   .object({
@@ -30,17 +31,11 @@ export const RATIO_SUBMIT_ANSWER_TOOL = {
     properties: {
       ticket_id: {
         type: 'string',
-        description:
-          'The unique checkpoint ticket ID returned by ratio_write_file or ratio_edit_file.',
-      },
-      ticketId: {
-        type: 'string',
-        description: 'Alias for ticket_id.',
+        description: 'The unique ticket ID returned by a checkpoint_required response.',
       },
       answer: {
         type: 'string',
-        description:
-          'The student explanation answering the Socratic question regarding the architectural change.',
+        description: 'The plain language architectural explanation answering the checkpoint question.',
       },
     },
     required: ['answer'],
@@ -51,6 +46,7 @@ export interface SubmitAnswerDependencies {
   stagingBuffer?: StagingBuffer;
   pendingRepo?: PendingWriteRepository;
   checkpointRepo?: CheckpointRepository;
+  sessionRepo?: SessionRepository;
   trustRepo?: TrustScoreRepository;
   trustCoordinator?: TrustScoreCoordinator;
   executor?: CommitTransactionExecutor;

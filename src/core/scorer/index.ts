@@ -10,6 +10,7 @@ import {
   type ComplexityEvaluation,
   type DependencyDiff,
   type ScoringThresholds,
+  type LineDeltaMetrics,
 } from './types.js';
 
 export * from './types.js';

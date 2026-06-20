@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { ExitCode, CliError, handleCliError, createProgram } from '../../src/cli/index.js';
 
 describe('Ratio CLI Standardized Error Handling and Exit Codes', () => {
-  let originalExitCode: number | undefined;
+  let originalExitCode: any;
   let originalError: typeof console.error;
   let tempDir: string;
   let originalCwd: string;
@@ -81,12 +81,12 @@ describe('Ratio CLI Standardized Error Handling and Exit Codes', () => {
 
     // status in empty uninitialized folder should set exit code 1
     await program.parseAsync(['bun', 'ratio', 'status']);
-    expect(process.exitCode).toBe(ExitCode.USER_ERROR);
+    expect(process.exitCode as any).toBe(ExitCode.USER_ERROR);
 
     // config get in empty folder should set exit code 1
     process.exitCode = undefined;
     const configProgram = createProgram();
     await configProgram.parseAsync(['bun', 'ratio', 'config', 'get', 'nonexistent.key']);
-    expect(process.exitCode).toBe(ExitCode.USER_ERROR);
+    expect(process.exitCode as any).toBe(ExitCode.USER_ERROR);
   });
 });
