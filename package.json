@@ -7,13 +7,44 @@
   "bin": {
     "ratio": "./src/cli/index.ts"
   },
+  "files": [
+    "src",
+    "templates"
+  ],
+  "author": "sanjayrohith <sanjayrohith@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanjayrohith/ratio.git"
+  },
+  "homepage": "https://github.com/sanjayrohith/ratio#readme",
+  "bugs": {
+    "url": "https://github.com/sanjayrohith/ratio/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "socratic",
+    "ai-agents",
+    "claude-code",
+    "cursor",
+    "developer-tools",
+    "education"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
   "scripts": {
     "start": "bun run src/server/index.ts",
     "dev": "bun --watch src/server/index.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src test",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "build:bin": "bun build --compile ./src/cli/index.ts --outfile bin/ratio"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",

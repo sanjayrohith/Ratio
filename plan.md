@@ -751,7 +751,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "feat: add telemetry-free local metrics summary to cli exit messages"
   ```
 
-- [ ] **Task 114**: Configure `package.json` distribution metadata, `bin` field for `ratio` CLI executable, `files` list, and publishing permissions for npm distribution.
+- [x] **Task 114**: Configure `package.json` distribution metadata, `bin` field for `ratio` CLI executable, `files` list, and publishing permissions for npm distribution.
 
   ```bash
   git commit -m "build: configure npm publishing configuration and binary distribution manifests"
