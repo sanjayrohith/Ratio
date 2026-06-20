@@ -763,7 +763,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "fix: resolve final edge cases in windows file path separators and stdio encoding"
   ```
 
-- [ ] **Task 116**: Execute smoke tests in `test/smoke/binary.test.ts` verifying CLI execution, MCP initialization, and reporting against compiled standalone binaries.
+- [x] **Task 116**: Execute smoke tests in `test/smoke/binary.test.ts` verifying CLI execution, MCP initialization, and reporting against compiled standalone binaries.
 
   ```bash
   git commit -m "test: execute full end-to-end smoke test across compiled distribution binaries"
