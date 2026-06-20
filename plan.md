@@ -775,7 +775,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "chore: finalize version 1.0.0 release metadata, changelog, and license files"
   ```
 
-- [ ] **Task 118**: Update repository root `README.md` with product overview, badge links, quickstart commands, architecture overview, and instructions for Claude Code and Cursor.
+- [x] **Task 118**: Update repository root `README.md` with product overview, badge links, quickstart commands, architecture overview, and instructions for Claude Code and Cursor.
 
   ```bash
   git commit -m "docs: update main readme with quickstart, demo asciinema link, and mcp installation commands"
