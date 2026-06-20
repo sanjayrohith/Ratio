@@ -1,4 +1,5 @@
 import type { FileEditChunk } from '../../types/protocol.js';
+import { normalizeLineEndings, detectLineEnding } from '../utils/platform.js';
 
 export class PatchError extends Error {
   constructor(
@@ -27,9 +28,22 @@ export function isFileDeletion(originalContent: string, newContent: string): boo
 /**
  * Applies a single edit chunk to the content, optionally constrained by line range.
  * Supports zero-byte file initialization, empty replacement strings (deletions),
- * and pure insertions.
+ * pure insertions, and CRLF cross-platform normalization.
  */
 export function applySingleChunk(content: string, edit: FileEditChunk): string {
+  const ending = detectLineEnding(content);
+  const normalizedContent = normalizeLineEndings(content, 'lf');
+  const normalizedEdit: FileEditChunk = {
+    ...edit,
+    oldText: normalizeLineEndings(edit.oldText, 'lf'),
+    newText: normalizeLineEndings(edit.newText, 'lf'),
+  };
+
+  const result = applySingleChunkInternal(normalizedContent, normalizedEdit);
+  return ending === 'crlf' ? normalizeLineEndings(result, 'crlf') : result;
+}
+
+function applySingleChunkInternal(content: string, edit: FileEditChunk): string {
   const { oldText, newText, startLine, endLine } = edit;
 
   // Case 1: Original content is empty (zero-byte file creation or initialization)

@@ -4,6 +4,7 @@ import type { Database, Statement } from 'bun:sqlite';
 import type { JSONRPCMessage, MessageExtraInfo, RequestId } from '@modelcontextprotocol/sdk/types.js';
 import type { Transport, TransportSendOptions } from '@modelcontextprotocol/sdk/shared/transport.js';
 import { ReadBuffer, serializeMessage } from '@modelcontextprotocol/sdk/shared/stdio.js';
+import { safeStdioBuffer } from '../core/utils/platform.js';
 
 /**
  * Registry and manager for finalizing SQLite prepared statements
@@ -121,7 +122,8 @@ export class ManagedStdioTransport implements Transport {
     this._ondata = (chunk: Buffer) => {
       if (this._closed) return;
       try {
-        this._readBuffer.append(chunk);
+        const safeChunk = safeStdioBuffer(chunk);
+        this._readBuffer.append(safeChunk);
         this.processReadBuffer();
       } catch (error) {
         this.onerror?.(error as Error);

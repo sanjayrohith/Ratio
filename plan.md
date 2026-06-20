@@ -757,7 +757,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "build: configure npm publishing configuration and binary distribution manifests"
   ```
 
-- [ ] **Task 115**: Fix cross-platform edge cases in `src/core/utils/platform.ts` handling Windows path separators (`\` vs `/`), CRLF line endings, and stdio binary encoding.
+- [x] **Task 115**: Fix cross-platform edge cases in `src/core/utils/platform.ts` handling Windows path separators (`\` vs `/`), CRLF line endings, and stdio binary encoding.
 
   ```bash
   git commit -m "fix: resolve final edge cases in windows file path separators and stdio encoding"
