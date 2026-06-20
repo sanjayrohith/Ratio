@@ -739,7 +739,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "ci: implement github actions workflow for automated testing and linting"
   ```
 
-- [ ] **Task 112**: Create release workflow in `.github/workflows/release.yml` using `bun build --compile` to generate standalone binaries for Linux (x64, arm64), macOS (x64, arm64), and Windows.
+- [x] **Task 112**: Create release workflow in `.github/workflows/release.yml` using `bun build --compile` to generate standalone binaries for Linux (x64, arm64), macOS (x64, arm64), and Windows.
 
   ```bash
   git commit -m "ci: implement cross-platform compilation and binary artifact build pipeline"
