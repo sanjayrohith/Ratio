@@ -745,7 +745,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
   git commit -m "ci: implement cross-platform compilation and binary artifact build pipeline"
   ```
 
-- [ ] **Task 113**: Implement local session summary in `src/cli/summary.ts` printing total intercepted writes, checkpoints cleared, and active trust scores upon process termination.
+- [x] **Task 113**: Implement local session summary in `src/cli/summary.ts` printing total intercepted writes, checkpoints cleared, and active trust scores upon process termination.
 
   ```bash
   git commit -m "feat: add telemetry-free local metrics summary to cli exit messages"

@@ -11,6 +11,7 @@ import { pc } from './ui.js';
 import { ExitCode, CliError, handleCliError } from './errors.js';
 
 export { ExitCode, CliError, handleCliError };
+export * from './summary.js';
 
 export interface GlobalCliOptions {
   verbose?: boolean;
