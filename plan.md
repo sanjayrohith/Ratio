@@ -715,7 +715,7 @@ The plan consists of **118 atomic implementation tasks** organized across 20 dev
 
 ### Phase 20 (11 tasks) — Documentation, CI/CD, Packaging & v1.0.0 Production Release
 
-- [ ] **Task 108**: Author architecture reference in `docs/architecture/overview.md` with Mermaid sequence diagrams illustrating Agent <-> MCP <-> SQLite <-> Filesystem workflow.
+- [x] **Task 108**: Author architecture reference in `docs/architecture/overview.md` with Mermaid sequence diagrams illustrating Agent <-> MCP <-> SQLite <-> Filesystem workflow.
 
   ```bash
   git commit -m "docs: create comprehensive architecture documentation and interception flowcharts"
